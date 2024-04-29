@@ -111,5 +111,11 @@ receivingNews/
  ```
 
  ## Project recovery
-To recover the project, follow the instructions inside the **README.md** located at `/scripts`.
+To automatically recover the project, follow the steps below:
+    * Requirements: R and MATLAB
+    1. Go to the ./scripts/run_scripts
+    2. Execute ReceivingNews_1_Run_Matlab_scripts.m This will run steps 1 to 8 and step 10
+    3. Execute ReceivingNews_2_Run_R_scripts.m This will run steps 9 to 16 as well as the .Rmd scripts, except step 10
+
+To manually recover the project, follow the instructions inside the **README.md** located at `/scripts`.
 
