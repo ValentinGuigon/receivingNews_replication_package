@@ -1,0 +1,7 @@
+"0","H.scv <- Hscv(post[, 1:2])"
+"0","fhat_post <- kde(x = post[, 1:2], H = H.scv, compute.cont = TRUE)"
+"0",""
+"0","plot(fhat_post, display = ""persp"", col = ""purple"", border = NA,"
+"0","     xlab = ""\nmu"", ylab = ""\nsigma"", zlab = ""\np(mu, sigma)"","
+"0","     shade = 0.8, phi = 30, ticktype = ""detailed"","
+"0","     cex.lab = 1.2, family = ""Helvetica"")"

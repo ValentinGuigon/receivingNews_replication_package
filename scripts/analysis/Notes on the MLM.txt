@@ -1,0 +1,16 @@
+I did make a second, more academic version of the models, in which I removed :
+- The random effects of Year and Group, since 
+	they only have 2 levels each, 
+	no difference was found between groups and years (except WTP), 
+	and the nested version (1|Year/Group), which gives 4 levels, still had a variance of 0.
+
+- The random effects of order, 
+	which consistently had a variance of 0
+As a result, the subject random effects gain a sufficiently high variance
+
+- I also removed the subject random effects in the success models, 
+	since the variance is systematically 0, probably because the subjects are very close in terms of success. 
+
+As a result, the second version of the success models is a fixed model and not a mixed model.
+
+The .R and .RData files for these models end by _rand2.

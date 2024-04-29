@@ -1,0 +1,4 @@
+"0",""
+"0","plot_Polar_MLM_controlled_effect$`Polarization:Veracity`+ "
+"0","     scale_color_manual(values = c(""#00AFBB"",""#FC4E07"")) + "
+"0","     scale_fill_manual(values = c(""#00AFBB"",""#FC4E07""))"

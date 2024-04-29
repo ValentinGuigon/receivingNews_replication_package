@@ -1,0 +1,3 @@
+"0","prior_draws(mod) %>%"
+"0","  mutate(p = brms::inv_logit_scaled(Intercept) ) %>%"
+"0","  ggplot(aes(x = p) ) +  geom_density(fill = ""steelblue"", adjust = 0.1)"

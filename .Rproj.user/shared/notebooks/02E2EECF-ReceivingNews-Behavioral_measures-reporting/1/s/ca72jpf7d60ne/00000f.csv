@@ -1,0 +1,33 @@
+"0",""
+"0","pander::pander(xtab1, caption = ""Performances (%) in correctly estimating veracity, classified by Theme and Veracity"", digits=4, style='multiline', justify='right')"
+"1","
+-------------------------------------------
+           Theme   Veracity    mean      sd
+---------------- ---------- ------- -------
+       Democracy      False   41.91   17.42
+
+       Democracy       True   55.38   19.93
+
+         Ecology      False   35.17    18.2
+
+         Ecology       True   69.28   17.05
+
+  Social justice      False   40.21   18.28
+
+  Social justice       True   67.44   17.43
+-------------------------------------------
+
+Table: Performances (%) in correctly estimating veracity, classified by Theme and Veracity
+
+"
+"0","ft1 = flextable(xtab1)"
+"0","ft1 <- theme_booktabs(ft1)"
+"0","#ft1 <- add_footer_lines(ft1, """")"
+"0","ft1 <- color(ft1, part = ""footer"", color = ""#666666"")"
+"0","# ft1 <- set_caption(ft1, caption = ""Performances (%) in correctly estimating veracity, classified by Theme and Veracity"")"
+"0","ft1 <- set_table_properties(ft1, align = ""center"", layout = ""autofit"")"
+"0",""
+"0","save_as_image(ft1, path = paste(figure_path, ""/tabSuccess.bmp"", sep=""""), expand = 20, res = 300, background=""white"")"
+"2","Error in match.arg(tolower(file_ext), choices = c(""png"", ""svg""), several.ok = FALSE) : 
+  'arg' should be one of “png”, “svg”
+"

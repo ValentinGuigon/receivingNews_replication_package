@@ -1,0 +1,188 @@
+---
+title: "ReceivingNews first wave - power simulation"
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+ 
+```
+By Valentin Guigon
+June 2023
+```
+
+
+```{r, setup, include=FALSE}
+rm(list = ls(all.names = TRUE)) #will clear all objects includes hidden objects.
+gc() #free up memory and report the memory usage
+
+list.of.packages=c("lme4", "magrittr", "dplyr", "stringr", "simr",
+                   "rprojroot")
+{
+  new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
+  if(length(new.packages)) install.packages(new.packages)
+  lapply(list.of.packages, require, character.only = TRUE)
+}
+
+project_root = find_rstudio_root_file()
+
+```
+
+
+
+```{r ,load data and variables, include=FALSE}
+load(paste("../../R_environments/ReceivingNews2-power_simulation_env.RData", sep=""))
+```
+
+
+
+# Power simulation at the first wave
+We hypothesized that participants' veracity estimation was significantly explained by news' content uncertainty, as assessed by news' content precision level (i.e., *Imprecision*). After a first acquisition of data, with n=79, we simulate the current power for the fixed simple effect of the variable *Imprecision*, and for the fixed interaction effect of the variable *Imprecision* with the variable *Veracity*. Then we simulate the power for lower fixed effects and more participants. We set up the number of simulations at 100.
+
+# I. Full control model
+We formulated a model with control variables but removed complexity from the random structure to save computation time. 
+The model is written with the form:
+```
+Success ~ Veracity*Imprecision + Veracity*Polarization + Confidence + Veracity*Theme + 
+Age + Sex + Education + Ec + (1|Subject)
+```
+
+## A. Current power
+
+We simulate the current power for our model. Effect sizes are:
+- Imprecision: `r summary(mSuccessAmbig)$coefficients[3,1]` (odds-ratio = `r exp(summary(mSuccessAmbig)$coefficients[3,1])`)
+- Polarization: `r summary(mSuccessAmbig)$coefficients[4,1]` (odds-ratio = `r exp(summary(mSuccessAmbig)$coefficients[4,1])`)
+- Interaction of imprecision with veracity judgment: `r summary(mSuccessAmbig)$coefficients[14,1]` (odds-ratio = `r exp(summary(mSuccessAmbig)$coefficients[14,1])`)
+- Interaction of polarization with veracity judgment: `r summary(mSuccessAmbig)$coefficients[15,1]` (odds-ratio = `r exp(summary(mSuccessAmbig)$coefficients[15,1])`)
+
+The current power for the interaction of imprecision with veracity judgment is:
+
+```{r ReceivingNews2 Model1 Imprecision interaction effect power sim, echo=FALSE}
+ps2_mSuccessImprec
+```
+
+The current power for the interaction of polarization with veracity judgment is:
+
+```{r ReceivingNews2 Model1 Polarization interaction effect power sim, echo=FALSE}
+ps4_mSuccessPolar
+```
+
+
+
+## B. Simulation of power
+
+We simulate the power for Imprecision and Polarization simple effects with 80, 150, 200 and 250 subjects. The simulated power is:
+
+```{r ReceivingNews2 Model 1 Imprecision simple effect predicted power, echo=FALSE}
+pc_mSuccess2_fixed_extended_Imprec
+```
+
+```{r ReceivingNews2 Model 1 Polarization simple effect predicted power, echo=FALSE}
+pc_mSuccess2_fixed_extended_Polar
+```
+
+**However the computation time is too high (>3h)**
+
+
+
+
+
+# II. Simpler model
+
+To save computation time, we remove the sociodemographics variables. The model is now written with the form:
+```
+Success ~ Veracity * Imprecision + Veracity * Polarization + Confidence + Veracity * Theme + (1 | Subject)
+```
+
+We simulate the current power for our model. Effect sizes are:
+- Imprecision: `r summary(mSuccessAmbig2)$coefficients[3,1]` (odds-ratio = `r exp(summary(mSuccessAmbig2)$coefficients[3,1])`)
+- Polarization: `r summary(mSuccessAmbig2)$coefficients[4,1]` (odds-ratio = `r exp(summary(mSuccessAmbig2)$coefficients[4,1])`)
+- Interaction of imprecision with veracity judgment: `r summary(mSuccessAmbig2)$coefficients[7,1]` (odds-ratio = `r exp(summary(mSuccessAmbig2)$coefficients[7,1])`)
+- Interaction of polarization with veracity judgment: `r summary(mSuccessAmbig2)$coefficients[8,1]` (odds-ratio = `r exp(summary(mSuccessAmbig2)$coefficients[8,1])`)
+
+
+## A. Actual effect size
+We simulate the power for 80, 150, 200 and 250 subjects. The simulated power is:
+
+```{r ReceivingNews2 Model 2 Imprecision simple effect predicted power - Plot, echo=FALSE}
+plot(pc_mSuccess2_fixed_extended_Imprec)
+```
+
+```{r ReceivingNews2 Model 2 Polarization simple effect predicted power - Plot, echo=FALSE}
+plot(pc_mSuccess2_fixed_extended_Polar)
+```
+
+
+## B. Low effect size
+We lower *Imprecision* fixed main effect at -0.05 (initially at -0.2): 
+The simulated power is:
+
+```{r ReceivingNews2 Model 2 low Imprecision simple effect predicted power - Plot, echo=FALSE}
+plot(pc_mSuccessAmbig3_fixed_extended_Imprec)
+```
+
+We lower *Polarization* fixed main effect at -0.05 (initially at -0.17): 
+The simulated power is:
+
+```{r ReceivingNews2 Model 2 low Polarization simple effect predicted power - Plot, echo=FALSE}
+plot(pc_mSuccessAmbig3_fixed_extended_Polar)
+```
+
+The effect size is too low to have good power. 
+
+
+## C. Mid effet size
+
+### Simple effect with 250 subjects
+We lower *Imprecision* fixed main effect at -0.1 (initially at -0.2):
+
+```{r ReceivingNews2 Model 2 mid Imprecision simple effect predicted power - Plot, echo=FALSE}
+plot(pc_mSuccessAmbig4_fixed_extended_Imprec)
+```
+
+We detect an effect size as low as -.1 with power >92% from 200 subjects.
+
+
+We lower *Polarization* fixed main effect at -0.1 (initially at -0.2):
+
+```{r ReceivingNews2 Model 2 mid Polarization simple effect predicted power - Plot, echo=FALSE}
+plot(pc_mSuccessAmbig4_fixed_extended_Polar)
+```
+
+We detect an effect size as low as -.1 with power >92% from 250 subjects.
+
+
+### Interaction effects with 250 subjects
+
+We simulate the power for Imprecision interacting with Veracity with 80, 150, 200 and 250 subjects and lower the fixed effect at -0.25. The simulated power is:
+
+```{r ReceivingNews2 Model 2 Imprecision interaction effect predicted power - Plot, echo=FALSE}
+plot(pc_mSuccessAmbig5_fixed_extended_Imprec)
+```
+
+
+We simulate the power for Polarization interacting with Veracity with 80, 150, 200 and 250 subjects and lower the fixed effect at -0.25. The simulated power is:
+
+```{r ReceivingNews2 Model 2 Polarization interaction effect predicted power - Plot, echo=FALSE}
+plot(pc_mSuccessAmbig5_fixed_extended_Polar)
+```
+
+
+## D. Interaction fixed effects against main fixed effects
+
+We compare the power for the fixed Imprecision interaction effect with that of the fixed main effect.
+
+
+First, we check the simulated current power for the interaction fixed effects:
+
+```{r ReceivingNews2 Model 2 current power, echo=FALSE}
+ps_mSuccessAmbigInt_fixed
+```
+
+
+We simulate the power for 80, 150, 200 and 250 subjects, lower the fixed effect at -0.25 and compare the model to only specified fixed effects in the alternative model. The simulated power for the interaction is:
+
+```{r ReceivingNews2 Model 2 Int vs Main predicted power - Plot, echo=FALSE}
+plot(p_curve_interaction_success)
+```
+
+# To exceed the 95% Power for Imprecision main effect, with a fixed effect lower than that of the first wave, we need to exceed 200 participants. We will aim for 250 participants.

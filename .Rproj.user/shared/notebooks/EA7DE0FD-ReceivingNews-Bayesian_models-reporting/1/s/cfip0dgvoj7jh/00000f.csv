@@ -1,0 +1,3 @@
+"0","# Odds ratio 2nd group vs 1st group"
+"0","pA = out_rec_group$BUGSoutput$mean$p2"
+"0","pB = out_rec_group$BUGSoutput$mean$p1"

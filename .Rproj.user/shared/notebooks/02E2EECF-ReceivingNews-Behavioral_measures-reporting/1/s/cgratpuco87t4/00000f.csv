@@ -1,0 +1,461 @@
+"0","rm(list = ls(all.names = TRUE)) #will clear all objects includes hidden objects."
+"0","gc() #free up memory and report the memory usage"
+"1","      "
+"1","     used"
+"1","  (Mb)"
+"1"," gc trigger"
+"1","   (Mb)"
+"1","  max used"
+"1","   (Mb)"
+"1","
+Ncells"
+"1","  5929328"
+"1"," 316.7"
+"1","   14868081"
+"1","  794.1"
+"1","  14868081"
+"1","  794.1"
+"1","
+Vcells"
+"1"," 15988227"
+"1"," 122.0"
+"1","  144397088"
+"1"," 1101.7"
+"1"," 225620450"
+"1"," 1721.4"
+"1","
+"
+"0","list.of.packages <- c(""MKinfer"", ""ggplot2"", ""plyr"", ""BayesFactor"", ""bayestestR"","
+"0","                      ""flextable"", ""rstatix"","
+"0","                      ""rprojroot"") "
+"0","{"
+"0","  new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,""Package""])]"
+"0","  if(length(new.packages)) install.packages(new.packages)"
+"0","  lapply(list.of.packages, require, character.only = TRUE)"
+"0","}"
+"1","# Downloading packages -------------------------------------------------------
+"
+"1","
+"
+"1","- Downloading gmp from CRAN ...                 "
+"1","OK [733.9 Kb in 1.0s]
+"
+"1","- Downloading miceadds from CRAN ...            "
+"1","OK [579.4 Kb in 0.6s]
+"
+"1","- Downloading ordinal from CRAN ...             "
+"1","OK [1.2 Mb in 0.69s]
+"
+"1","- Downloading ucminf from CRAN ...              "
+"1","OK [38.6 Kb in 0.69s]
+"
+"1","- Downloading RcppArmadillo from CRAN ...       "
+"1","OK [2 Mb in 0.68s]
+"
+"1","- Downloading BayesFactor from CRAN ...         "
+"1","OK [7.1 Mb in 1.1s]
+"
+"1","- Downloading deSolve from CRAN ...             "
+"1","OK [2.4 Mb in 0.8s]
+"
+"1","- Downloading flextable from CRAN ...           "
+"1","OK [1.3 Mb in 1.0s]
+"
+"1","- Downloading officer from CRAN ...             "
+"1","OK [1.6 Mb in 0.69s]
+"
+"1","- Downloading gdtools from CRAN ...             "
+"1","OK [2.1 Mb in 0.84s]
+"
+"1","
+"
+"1","The following package(s) will be installed:
+"
+"1","
+"
+"1","- arrangements      [1.1.9]
+"
+"1","- BayesFactor       [0.9.12-4.7]
+"
+"1","- cli               [3.6.1]
+"
+"1","- contfrac          [1.1-12]
+"
+"1","- crul              [1.4.0]
+"
+"1","- deSolve           [1.40]
+"
+"1","- elliptic          [1.4-0]
+"
+"1","- exactRankTests    [0.8-35]
+"
+"1","- fansi             [1.0.5]
+"
+"1","- flextable         [0.9.5]
+"
+"1","- fontBitstreamVera [0.1.1]
+"
+"1","- fontLiberation    [0.1.0]
+"
+"1","- fontquiver        [0.2.1]
+"
+"1","- foreach           [1.5.2]
+"
+"1","- gdtools           [0.3.7]
+"
+"1","- gfonts            [0.2.0]
+"
+"1","- glmnet            [4.1-8]
+"
+"1","- glue              [1.6.2]
+"
+"1","- gmp               [0.7-4]
+"
+"1","- httpcode          [0.3.0]
+"
+"1","- hypergeo          [1.2-13]
+"
+"1","- iterators         [1.0.14]
+"
+"1","- jomo              [2.7-6]
+"
+"1","- lifecycle         [1.0.3]
+"
+"1","- mice              [3.16.0]
+"
+"1","- miceadds          [3.17-44]
+"
+"1","- mitml             [0.4-5]
+"
+"1","- mitools           [2.4]
+"
+"1","- MKdescr           [0.8]
+"
+"1","- MKinfer           [1.1]
+"
+"1","- officer           [0.6.5]
+"
+"1","- ordinal           [2023.12-4]
+"
+"1","- pan               [1.9]
+"
+"1","- pbapply           [1.7-2]
+"
+"1","- RcppArmadillo     [0.12.8.1.0]
+"
+"1","- rlang             [1.1.1]
+"
+"1","- triebeard         [0.4.1]
+"
+"1","- ucminf            [1.2.1]
+"
+"1","- urltools          [1.7.3]
+"
+"1","- vctrs             [0.6.4]
+"
+"1","
+"
+"1","These packages will be installed into ""C:/Users/vguigon/Desktop/Research_directory/receivingNews/renv/library/R-4.3/x86_64-w64-mingw32"".
+"
+"1","
+"
+"0","Y"
+"1","
+"
+"1","# Installing packages --------------------------------------------------------
+"
+"1","
+"
+"1","- Installing cli ...                            "
+"1","OK [linked from cache in 0.0035s]
+"
+"1","- Installing glue ...                           "
+"1","OK [linked from cache in 0.0052s]
+"
+"1","- Installing rlang ...                          "
+"1","OK [linked from cache in 0.0034s]
+"
+"1","- Installing lifecycle ...                      "
+"1","OK [linked from cache in 0.003s]
+"
+"1","- Installing fansi ...                          "
+"1","OK [linked from cache in 0.0034s]
+"
+"1","- Installing vctrs ...                          "
+"1","OK [linked from cache in 0.0059s]
+"
+"1","- Installing MKdescr ...                        "
+"1","OK [linked from cache in 0.0044s]
+"
+"1","- Installing gmp ...                            "
+"1","OK [installed binary and cached in 0.7s]
+"
+"1","- Installing arrangements ...                   "
+"1","OK [linked from cache in 0.0051s]
+"
+"1","- Installing exactRankTests ...                 "
+"1","OK [linked from cache in 0.0063s]
+"
+"1","- Installing iterators ...                      "
+"1","OK [linked from cache in 0.0055s]
+"
+"1","- Installing foreach ...                        "
+"1","OK [linked from cache in 0.0052s]
+"
+"1","- Installing glmnet ...                         "
+"1","OK [linked from cache in 0.0051s]
+"
+"1","- Installing pan ...                            "
+"1","OK [linked from cache in 0.0042s]
+"
+"1","- Installing ucminf ...                         "
+"1","OK [installed binary and cached in 1.0s]
+"
+"1","- Installing ordinal ...                        "
+"1","OK [installed binary and cached in 1.3s]
+"
+"1","- Installing jomo ...                           "
+"1","OK [linked from cache in 0.0046s]
+"
+"1","- Installing mitml ...                          "
+"1","OK [linked from cache in 0.0031s]
+"
+"1","- Installing mice ...                           "
+"1","OK [linked from cache in 0.003s]
+"
+"1","- Installing mitools ...                        "
+"1","OK [linked from cache in 0.0049s]
+"
+"1","- Installing RcppArmadillo ...                  "
+"1","OK [installed binary and cached in 6.8s]
+"
+"1","- Installing miceadds ...                       "
+"1","OK [built from source and cached in 2.8m]
+"
+"1","- Installing MKinfer ...                        "
+"1","OK [linked from cache in 0.0076s]
+"
+"1","- Installing pbapply ...                        "
+"1","OK [linked from cache in 0.0066s]
+"
+"1","- Installing elliptic ...                       "
+"1","OK [linked from cache in 0.004s]
+"
+"1","- Installing contfrac ...                       "
+"1","OK [linked from cache in 0.0034s]
+"
+"1","- Installing deSolve ...                        "
+"1","OK [installed binary and cached in 1.7s]
+"
+"1","- Installing hypergeo ...                       "
+"1","OK [linked from cache in 0.0039s]
+"
+"1","- Installing BayesFactor ...                    "
+"1","OK [installed binary and cached in 1.7s]
+"
+"1","- Installing officer ...                        "
+"1","OK [installed binary and cached in 1.7s]
+"
+"1","- Installing triebeard ...                      "
+"1","OK [linked from cache in 0.0036s]
+"
+"1","- Installing urltools ...                       "
+"1","OK [linked from cache in 0.0034s]
+"
+"1","- Installing httpcode ...                       "
+"1","OK [linked from cache in 0.0089s]
+"
+"1","- Installing crul ...                           "
+"1","OK [linked from cache in 0.0039s]
+"
+"1","- Installing gfonts ...                         "
+"1","OK [linked from cache in 0.0093s]
+"
+"1","- Installing fontBitstreamVera ...              "
+"1","OK [linked from cache in 0.0037s]
+"
+"1","- Installing fontLiberation ...                 "
+"1","OK [linked from cache in 0.0043s]
+"
+"1","- Installing fontquiver ...                     "
+"1","OK [linked from cache in 0.0065s]
+"
+"1","- Installing gdtools ...                        "
+"1","OK [installed binary and cached in 1.6s]
+"
+"1","- Installing flextable ...                      "
+"1","OK [installed binary and cached in 1.2s]
+"
+"1","
+"
+"1","Successfully installed 40 packages in 3.2 minutes.
+"
+"2","Loading required package: MKinfer
+"
+"2","Loading required package: plyr
+"
+"2","-------------------------------------------------------------------------------------------
+"
+"2","You have loaded plyr after dplyr - this is likely to cause problems.
+If you need functions from both plyr and dplyr, please load plyr first, then dplyr:
+library(plyr); library(dplyr)
+"
+"2","-------------------------------------------------------------------------------------------
+"
+"2","
+Attaching package: ‘plyr’
+
+"
+"2","The following objects are masked from ‘package:dplyr’:
+
+    arrange, count, desc, failwith, id, mutate, rename, summarise, summarize
+
+"
+"2","The following object is masked from ‘package:purrr’:
+
+    compact
+
+"
+"2","Loading required package: BayesFactor
+"
+"2","Loading required package: Matrix
+"
+"2","
+Attaching package: ‘Matrix’
+
+"
+"2","The following objects are masked from ‘package:tidyr’:
+
+    expand, pack, unpack
+
+"
+"2","************
+Welcome to BayesFactor 0.9.12-4.7. If you have questions, please contact Richard Morey (richarddmorey@gmail.com).
+
+Type BFManual() to open the manual.
+************
+"
+"2","
+Attaching package: ‘BayesFactor’
+
+"
+"2","The following object is masked from ‘package:ks’:
+
+    compare
+
+"
+"2","Loading required package: flextable
+"
+"2","Registered S3 method overwritten by 'data.table':
+  method           from
+  print.data.table     
+"
+"2","
+Attaching package: ‘flextable’
+
+"
+"2","The following object is masked from ‘package:purrr’:
+
+    compose
+
+"
+"2","Loading required package: rstatix
+"
+"2","
+Attaching package: ‘rstatix’
+
+"
+"2","The following objects are masked from ‘package:plyr’:
+
+    desc, mutate
+
+"
+"2","The following object is masked from ‘package:stats’:
+
+    filter
+
+"
+"1","[[1]]
+"
+"1","[1]"
+"1"," TRUE"
+"1","
+"
+"1","
+"
+"1","[[2]]
+"
+"1","[1]"
+"1"," TRUE"
+"1","
+"
+"1","
+"
+"1","[[3]]
+"
+"1","[1]"
+"1"," TRUE"
+"1","
+"
+"1","
+"
+"1","[[4]]
+"
+"1","[1]"
+"1"," TRUE"
+"1","
+"
+"1","
+"
+"1","[[5]]
+"
+"1","[1]"
+"1"," TRUE"
+"1","
+"
+"1","
+"
+"1","[[6]]
+"
+"1","[1]"
+"1"," TRUE"
+"1","
+"
+"1","
+"
+"1","[[7]]
+"
+"1","[1]"
+"1"," TRUE"
+"1","
+"
+"1","
+"
+"1","[[8]]
+"
+"1","[1]"
+"1"," TRUE"
+"1","
+"
+"1","
+"
+"0","project_root = find_rstudio_root_file()"
+"0","knitr::opts_knit$set(root.dir = paste(project_root,""/documents/reports"", sep=""""))"
+"0",""
+"0","# set paths and mk necessary directories"
+"0","set.seed(12345)"
+"0","project_root = find_rstudio_root_file()"
+"0","if (!dir.exists(paste(project_root, ""/outputs/figures/R"", sep=""""))){"
+"0","  dir.create(""/outputs/figures/R"")"
+"0","}else{"
+"0","  print(""dir exists"")"
+"0","}"
+"1","[1]"
+"1"," ""dir exists"""
+"1","
+"
+"0","figure_path = (""C:/Users/vguigon/Desktop/Research_directory/receivingNews/outputs/figures/R"")"
+"0","knitr::opts_knit$set(root.dir = paste(project_root,""/outputs/reports"", sep=""""))"
+"0",""
+"0","load(paste(project_root, ""/R_environments/ReceivingNews-behavioral_measures_env.RData"", sep=""""))"
+"0",""

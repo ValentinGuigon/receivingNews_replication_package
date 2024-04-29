@@ -1,0 +1,4 @@
+"0",""
+"0","bmp(file=paste(project_root, ""/outputs/figures/R/Polarization_Bayes_MLM_ctrl_effect.bmp"", sep=""""),"
+"0","    width=550, height=350)"
+"0","plot_Polar_MLM_controlled_effect = plot(conditional_effects(mod), ask=""FALSE"")"

@@ -1,0 +1,2 @@
+"0","mod %>% "
+"0","  plot(pars = ""^b_"", combo = c(""dens_overlay"", ""trace""), widths = c(1, 1.5), theme = theme_bw(base_size = 14, base_family = ""Open Sans"")  )"

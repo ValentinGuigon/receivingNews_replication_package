@@ -1,0 +1,5 @@
+"0","formula(mSuccessPolarization)"
+"1","Success | trials(1) ~ 1 + Veracity:Polarization + (1 | Subject)"
+"1"," "
+"1","
+"

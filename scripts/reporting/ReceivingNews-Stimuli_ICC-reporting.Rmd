@@ -1,0 +1,73 @@
+---
+title: "ReceivingNews - Inter Rater Reliability"
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+```
+By Valentin Guigon
+June 2023
+```
+
+
+```{r, setup, include=FALSE}
+rm(list = ls(all.names = TRUE)) #will clear all objects includes hidden objects.
+gc() #free up memory and report the memory usage
+
+
+list.of.packages <- c("R.matlab", "psych",
+                      "rprojroot") 
+{
+  new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
+  if(length(new.packages)) install.packages(new.packages)
+  lapply(list.of.packages, require, character.only = TRUE)
+}
+
+project_root = find_rstudio_root_file()
+knitr::opts_knit$set(root.dir = paste(project_root,"/outputs/reports", sep=""))
+
+```
+
+```{r ,load data and variables, include=FALSE}
+
+load(paste(project_root, "/R_environments/ReceivingNews-Stimuli_ICC_env.RData", sep=""))
+mean_ICC <- read.csv(paste("../../data/processed/ICC.csv", sep=""))
+names(mean_ICC)[names(mean_ICC) == "ambiguity"] <- "imprecision"
+mean_ICC$consensuality = 10 - mean_ICC$split # consensuality is the inverse of split
+
+```
+
+# Reliability on news dimensions
+
+We use the package 'psych' to compute the IntraClass Correlations. We focus on the ICC2k.
+
+ICC2: A random sample of k judges rate each target. The measure is one of absolute agreement in the ratings.  
+Then, the reliability is estimated for the average of k ratings.  
+
+### A. IntraClass Correlations for imprecision:
+
+As shown below, a moderate degree of reliability was found between imprecision measurements. The average measure ICC was 0.54 with a 95% confidence interval from 0.4 to .66 (F(95,950)= 2.34, p<.001). 
+
+```{r ICC imprecision, echo=FALSE}
+
+ICC_imprecision
+```
+
+### B. IntraClass Correlations for consensuality
+
+As shown below, a high degree of reliability was found between consensuality measurements. The average measure ICC was .81 with a 95% confidence interval from .75 to .87 (F(95,950)= 5.57, p<.001). 
+
+```{r ICC consensuality, echo=FALSE}
+
+ICC_consensuality
+```
+
+### C. IntraClass Correlations for desirability
+
+As shown below, a moderate degree of reliability was found between desirability measurements. The average measure ICC was .59 with a 95% confidence interval from .46 to .7 (F(95,950)= 2.48, p<.001). 
+
+```{r ICC desirability, echo=FALSE}
+
+ICC_desirability
+```

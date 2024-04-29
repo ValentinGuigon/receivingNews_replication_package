@@ -1,0 +1,339 @@
+---
+title: "Receiving news - Behavioral measures"
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+```         
+By Valentin Guigon
+July 2023
+```
+
+
+```{r, setup, include=FALSE}
+rm(list = ls(all.names = TRUE)) #will clear all objects includes hidden objects.
+gc() #free up memory and report the memory usage
+
+list.of.packages <- c("MKinfer", "ggplot2", "plyr", "BayesFactor", "bayestestR",
+                      "flextable", "rstatix",
+                      "rprojroot") 
+{
+  new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
+  if(length(new.packages)) install.packages(new.packages)
+  lapply(list.of.packages, require, character.only = TRUE)
+}
+
+project_root = find_rstudio_root_file()
+knitr::opts_knit$set(root.dir = paste(project_root,"/documents/reports", sep=""))
+
+# set paths and mk necessary directories
+set.seed(12345)
+project_root = find_rstudio_root_file()
+if (!dir.exists(paste(project_root, "/outputs/figures/R", sep=""))){
+  dir.create("/outputs/figures/R")
+}else{
+  print("dir exists")
+}
+
+figure_path = ("C:/Users/vguigon/Desktop/Research_directory/receivingNews/outputs/figures/R")
+knitr::opts_knit$set(root.dir = paste(project_root,"/outputs/reports", sep=""))
+
+load(paste(project_root, "/R_environments/ReceivingNews-behavioral_measures_env.RData", sep=""))
+
+```
+
+
+
+
+
+### Participants performances in estimating veracity
+We look at the average scores.
+
+First, separating by news veracity
+```{r, echo=FALSE}
+theme_proportion_success_summary
+```
+
+Then, separating by news theme
+```{r, echo=FALSE}
+veracity_proportion_success_summary
+```
+
+Finally, separating by news theme and news veracity
+
+``` {r Success in estimating veracity, echo=FALSE}
+
+pander::pander(xtab1, caption = "Performances (%) in correctly estimating veracity, classified by Theme and Veracity", digits=4, style='multiline', justify='right')
+
+ft1 = flextable(xtab1)
+ft1 <- theme_booktabs(ft1)
+#ft1 <- add_footer_lines(ft1, "")
+ft1 <- color(ft1, part = "footer", color = "#666666")
+# ft1 <- set_caption(ft1, caption = "Performances (%) in correctly estimating veracity, classified by Theme and Veracity")
+ft1 <- set_table_properties(ft1, align = "center", layout = "autofit")
+
+save_as_image(ft1, path = paste(figure_path, "/tabSuccess.png", sep=""), expand = 20, res = 300, background="white")
+
+```
+
+
+
+
+
+### Participants judgments of veracity
+We look at the average rate of judging news as true or false.
+
+First, separating by news veracity
+```{r, echo=FALSE}
+theme_proportion_judgment_summary
+```
+
+Then, separating by news theme
+```{r, echo=FALSE}
+veracity_proportion_judgment_summary
+```
+
+Finally, separating by news theme and news veracity
+
+``` {r judgments of veracity, echo=FALSE}
+
+pander::pander(xtab2, caption = "Proportion (%) of news judged as true, classified by Theme and Veracity", digits=4, style='multiline', justify='right')
+
+ft2 = flextable(xtab2)
+ft2 <- theme_booktabs(ft2)
+#ft2 <- add_footer_lines(ft2, "")
+ft2 <- color(ft2, part = "footer", color = "#666666")
+# ft2 <- set_caption(ft2, caption = "Proportion (%) of news judged as true, classified by Theme and Veracity")
+ft2 <- set_table_properties(ft2, align = "center", layout = "autofit")
+
+save_as_image(ft2, path = paste(figure_path, "/tabJudgment.png", sep=""), expand = 20, res = 300, background="white")
+
+```
+
+
+
+
+
+### Participants confidence in estimating veracity
+We look at the average confidence.
+
+First, separating by news veracity
+```{r, echo=FALSE}
+theme_proportion_confidence_summary
+```
+
+Then, separating by news theme
+```{r, echo=FALSE}
+veracity_proportion_confidence_summary
+```
+
+Finally, separating by news theme and news veracity
+
+``` {r confidence in estimating veracity, echo=FALSE}
+
+pander::pander(xtab3, caption = "Confidence in veracity estimation, classified by Theme and Veracity", digits=4, style='multiline', justify='right')
+
+ft3 = flextable(xtab3)
+ft3 <- theme_booktabs(ft3)
+#ft3 <- add_footer_lines(ft3, "")
+ft3 <- color(ft3, part = "footer", color = "#666666")
+# ft3 <- set_caption(ft3, caption = "Confidence in veracity estimation, classified by Theme and Veracity")
+ft3 <- set_table_properties(ft3, align = "center", layout = "autofit")
+
+save_as_image(ft3, path = paste(figure_path, "/tabConfidence.png", sep=""), expand = 20, res = 300, background="white")
+
+```
+
+
+
+
+
+### Participants choices to receive more information
+We look at the average choices to receive.
+
+First, separating by news veracity
+```{r, echo=FALSE}
+theme_proportion_reception_summary
+```
+
+Then, separating by news theme
+```{r, echo=FALSE}
+veracity_proportion_reception_summary
+```
+
+Finally, separating by news theme and news veracity
+
+``` {r reception choices, echo=FALSE}
+
+pander::pander(xtab4, caption = "Choices (%) to receive extra information, classified by Theme and Veracity", digits=4, style='multiline', justify='right')
+
+ft4 = flextable(xtab4)
+ft4 <- theme_booktabs(ft4)
+#ft4 <- add_footer_lines(ft4, "")
+ft4 <- color(ft4, part = "footer", color = "#666666")
+# ft4 <- set_caption(ft4, caption = "Choices (%) to receive extra information, classified by Theme and Veracity")
+ft4 <- set_table_properties(ft4, align = "center", layout = "autofit")
+
+save_as_image(ft4, path = paste(figure_path, "/tabReception.png", sep=""), expand = 20, res = 300, background="white")
+
+
+pander::pander(xtab4_Veracity, caption = "Choices (%) to receive extra information, classified by Veracity", digits=4, style='multiline', justify='right')
+
+pander::pander(xtab4_Theme, caption = "Choices (%) to receive extra information, classified by Theme", digits=4, style='multiline', justify='right')
+
+```
+
+We compare the three themes with a kruskal_wallis test:
+
+``` {r}
+dRec %>% kruskal_test(Reception ~ Theme)
+```
+
+Subjects (%) that chose to receive at least one extra information:
+``` {r}
+curiosity
+```
+
+
+
+
+### Participants WTP to receive and to avoid receiving more information
+We look at the average WTP given the reception choice.
+
+First, separating by reception choices 
+```{r, echo=FALSE}
+reception_proportion_WTP_summary
+```
+
+Then, separating by news veracity
+```{r, echo=FALSE}
+theme_proportion_WTP_summary
+```
+
+Then, separating by news theme
+```{r, echo=FALSE}
+veracity_proportion_WTP_summary
+```
+
+Finally, separating by news theme and news veracity
+
+``` {r WTP to implement reception choice, echo=FALSE}
+
+pander::pander(xtab5, caption = "Willingness-To-Pay (from 0 to 25 ECU) to receive or not extra information, classified by Reception choice, Theme and Veracity", digits=3, style='multiline', justify='right')
+
+ft5 = flextable(xtab5)
+ft5 <- theme_booktabs(ft5)
+#ft5 <- add_footer_lines(ft5, "")
+ft5 <- color(ft5, part = "footer", color = "#666666")
+# ft5 <- set_caption(ft5, caption = "Willingness-To-Pay (from 0 to 25 ECU) to receive or not extra information, classified by Reception choice, Theme and Veracity")
+ft5 <- set_table_properties(ft5, align = "center", layout = "autofit")
+
+save_as_image(ft5, path = paste(figure_path, "/tabWTP.png", sep=""), expand = 20, res = 300, background="white")
+
+pander::pander(xtab5_Reception, caption = "Willingness-To-Pay (from 0 to 25 ECU) to receive or not extra information", digits=3, style='multiline', justify='right')
+
+```
+
+
+
+
+
+### Difference in Response Times between waves
+
+Ranksum test between waves returns no significant difference between the two waves of experiment.
+
+```{r RT differences between waves, echo=FALSE}
+
+waves_test
+
+```
+
+
+
+
+
+### Participants are not better than chance
+
+We compare participants' performances in estimating veracity with a
+theoretical random distribution. We define this distribution by a number
+of draws n=48, a probability p=.05 and a population of size N=258:
+
+```{r Performances in estimating veracity vs chance, echo=FALSE}
+
+ggplot(samples,aes(x = values, col = sample, fill = sample, group = sample)) + geom_density(alpha=0.2)
+ggsave("empiric_vs_simulatedRandom.png", path = figure_path, width = 5.5, height = 3.5, device='png', dpi=300, limitsize=FALSE)
+
+success_performances
+
+```
+
+
+Because the results in the bootstrap t test relies heavily on the single theoretic distribution, 
+we turn to a Bayesian comparison of proportions. We compare the proportion of successes in estimating veracity against a random distribution with a Bayesian framework via a logistic function.
+We chose as priors for lambda (aka p) 0.5.
+The first prior for the rscale we tested is the value 0.5.
+This is considered a "medium" scale value but it represents a pretty tight distribution around the mean in our case. 
+Our null hypothesis is therefore a distribution of behaviors equivalent to a random distribution.
+
+The standard deviation of the distribution is 3.2. 
+Assuming a distribution spanning the values from 18 to 36 successes (around 44 to 56% percent successes),
+we obtain the following distribution.
+
+
+
+```{r BayesFactor for veracity estimation vs chance 1, echo=FALSE}
+
+plot(chains1[,"p"], main = "Posterior of true probability\nof 'random-equivalent' behavior")
+
+png(file=paste(project_root, "/outputs/figures/R/Posterior_probability_rscale_0_and_half.png", sep=""),
+    width=550, height=350)
+plot(chains1[,"p"], main = "Posterior of true probability\nof 'random-equivalent' behavior")
+dev.off()
+
+```
+
+Most importantly, with a scale parameter of .5, the Bayes factor favors the null hypothesis 
+by a factor of about 0.1, which is considered anecdotal evidence according to Jeffereys (1961) and Lee & Wagenmakers (2013).
+However, 100% of the posteriors are in the range [49 53].
+
+```{r BayesFactor for veracity estimation vs chance BF 1, echo=FALSE}
+
+1/samples1
+
+proportionBF1_table2
+ftBF1 <- flextable(proportionBF1_table2)
+ftBF1 <- theme_booktabs(ftBF1)
+save_as_image(ftBF1, path = paste(figure_path, "/Posterior_summary_rscale_0_and_half.png", sep=""), expand = 20, res = 300, background="white")
+
+```
+
+If we change the rscale for a wider scale of 1.5, for which a logistic function would map more closely the empiric distribution, 
+we obtain the following posterior distribution:
+
+```{r BayesFactor for veracity estimation vs chance 2, echo=FALSE}
+
+plot(chains2[,"p"], main = "Posterior of true probability\nof 'random-equivalent' behavior")
+
+png(file=paste(project_root, "/outputs/figures/R/Posterior_probability_rscale_1_and_half.png", sep=""),
+    width=550, height=350)
+plot(chains2[,"p"], main = "Posterior of true probability\nof 'random-equivalent' behavior")
+dev.off()
+
+```
+
+The Bayes factor favors the null hypothesis by a factor of about 0.3, which is considered the low boundary of a moderate evidence.
+100% of the posteriors are still in the range [49 53].
+
+```{r BayesFactor for veracity estimation vs chance BF 2, echo=FALSE}
+
+1/samples2
+
+proportionBF2_table2
+ftBF2 <- flextable(proportionBF2_table2)
+ftBF2 <- theme_booktabs(ftBF2)
+save_as_image(ftBF2, path = paste(figure_path, "/Posterior_summary_rscale_1_and_half.png", sep=""), expand = 20, res = 300, background="white")
+
+```
+
+

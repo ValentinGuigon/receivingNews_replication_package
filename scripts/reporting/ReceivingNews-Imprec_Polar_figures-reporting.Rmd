@@ -1,0 +1,78 @@
+---
+title: "Receiving news - Imprecision & Polarization figures"
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+```         
+By Valentin Guigon
+July 2023
+```
+
+
+```{r, setup, include=FALSE}
+rm(list = ls(all.names = TRUE)) #will clear all objects includes hidden objects.
+gc() #free up memory and report the memory usage
+
+list.of.packages <- c("ggplot2", "sjPlot", "tidyverse", "ggpubr","RColorBrewer",
+                      "rprojroot", "patchwork", "ggpubr") 
+{
+  new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
+  if(length(new.packages)) install.packages(new.packages)
+  lapply(list.of.packages, require, character.only = TRUE)
+}
+
+project_root = find_rstudio_root_file()
+
+# set paths and mk necessary directories
+set.seed(12345)
+project_root = find_rstudio_root_file()
+if (!dir.exists(paste(project_root, "/outputs/figures/R", sep=""))){
+  dir.create("/outputs/figures/R")
+}else{
+  print("dir exists")
+}
+
+figure_path = paste(project_root, "/outputs/figures/R", sep="")
+
+# load the environments
+load(paste(project_root, "/R_environments/ReceivingNews-Imprec_Polar_figures_env.RData", sep=""))
+
+```
+
+
+
+
+
+### Participants performances in estimating veracity for Precise/Imprecise news & Consensual/Polarizing news
+
+```{r, echo=FALSE}
+
+success_combined_plots <- ggarrange(success_imprecision_barplot, success_Polarization_barplot, ncol=2, nrow=1, common.legend = TRUE, legend="top")
+success_combined_plots
+ggsave("Rplot_success_imprec_polar_notheme.png", path = figure_path, width = 5.5, height = 3.5, device='png', dpi=300, limitsize=FALSE)
+
+```
+
+
+### Participants judgments as true for Precise/Imprecise news & Consensual/Polarizing news
+
+```{r, echo=FALSE}
+
+judgment_combined_plots <- ggarrange(judgment_imprecision_barplot, judgment_Polarization_barplot, ncol=2, nrow=1, common.legend = TRUE, legend="top")
+judgment_combined_plots
+ggsave("Rplot_judgment_imprec_polar_notheme.png", path = figure_path, width = 5.5, height = 3.5, device='png', dpi=300, limitsize=FALSE)
+
+```
+
+
+### Participants choices to receive for Precise/Imprecise news & Consensual/Polarizing news
+
+```{r, echo=FALSE}
+
+reception_combined_plots <- ggarrange(reception_imprecision_barplot, reception_Polarization_barplot, ncol=2, nrow=1, common.legend = TRUE, legend="top")
+reception_combined_plots
+ggsave("Rplot_reception_imprec_polar_notheme.png", path = figure_path, width = 5.5, height = 3.5, device='png', dpi=300, limitsize=FALSE)
+
+```

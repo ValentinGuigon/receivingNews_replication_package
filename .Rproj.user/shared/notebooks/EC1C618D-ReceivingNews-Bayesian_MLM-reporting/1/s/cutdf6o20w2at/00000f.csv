@@ -1,0 +1,5 @@
+"0",""
+"0","mod = mSuccessImprecPolar"
+"0","prior <- prior_samples(mod)"
+"0","post <- posterior_samples(mod)"
+"0",""

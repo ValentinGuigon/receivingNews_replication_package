@@ -1,0 +1,5 @@
+"0","formula(mSuccessImprecision)"
+"1","Success | trials(1) ~ 1 + Veracity:Imprecision + (1 | Subject)"
+"1"," "
+"1","
+"

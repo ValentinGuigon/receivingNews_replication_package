@@ -1,0 +1,32 @@
+
+  model{
+
+      for(i in 1:N1) {
+        y1[i] ~ dnorm(mu1, tau)
+      }
+      
+       for(i in 1:N2) {
+        y2[i] ~ dnorm(mu2, tau)
+       }
+       
+       
+       for(i in 1:N3) {
+        y3[i] ~ dnorm(mu3, tau)
+      }
+      
+       for(i in 1:N4) {
+        y4[i] ~ dnorm(mu4, tau)
+       }
+       
+      mu1 ~ dunif(mu_prior_min, mu_prior_max)
+      mu2 ~ dunif(mu_prior_min, mu_prior_max)
+      mu3 ~ dunif(mu_prior_min, mu_prior_max)
+      mu4 ~ dunif(mu_prior_min, mu_prior_max)
+      tau = 1/S^2
+      S ~ dt(0, 1 / scale^2, 1)T(0, )
+
+    delta_Nr <- mu1 - mu3
+    delta_r <- mu2 - mu4
+    
+    Cohens_d_y1 <- (mu1 - mu2)/S
+    Cohens_d_y2 <- (mu3 - mu4)/S }

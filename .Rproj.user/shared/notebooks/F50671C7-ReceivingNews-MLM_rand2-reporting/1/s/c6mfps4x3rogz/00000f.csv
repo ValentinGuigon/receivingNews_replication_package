@@ -1,0 +1,3 @@
+"0","table_2"
+"0",""
+"0","webshot(table_2$file, paste(figure_path, ""/"", ""tab_rand2_mSuccess_truth_judgment.png"", sep=""""), zoom = 3)"

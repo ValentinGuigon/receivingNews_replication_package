@@ -1,0 +1,190 @@
+---
+title: "ReceivingNews - Bayesian models"
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+```
+By Valentin Guigon
+June 2023
+```
+
+
+```{r, setup, include=FALSE}
+rm(list = ls(all.names = TRUE)) #will clear all objects includes hidden objects.
+gc() #free up memory and report the memory usage
+
+list.of.packages <- c("rprojroot") 
+{
+  new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
+  if(length(new.packages)) install.packages(new.packages)
+  lapply(list.of.packages, require, character.only = TRUE)
+}
+
+project_root = find_rstudio_root_file()
+knitr::opts_knit$set(root.dir = paste(project_root,"/outputs/reports", sep=""))
+
+load(paste(project_root, "/R_environments/ReceivingNews-Bayesian_models_env.RData", sep=""))
+
+```
+
+
+### A. Bayesian models of success probability between waves
+
+We compare the probabilities of success p1 and p2 for wave 1 and wave 2:
+
+```{r probability of success between years, echo=FALSE}
+
+print(out_success_year$BUGSoutput$summary)
+```
+
+
+
+
+
+### B. Bayesian models of success probability between groups
+
+We compare the probabilities of success p1 and p2 for group 1 and group
+2:
+
+```{r probability of success between groups, echo=FALSE}
+
+print(out_success_group$BUGSoutput$summary)
+```
+
+
+
+
+
+### C. Bayesian models of reception probability between waves
+
+We compare the probabilities of reception p1 and p2 for wave 1 and wave
+2:
+
+```{r probability of reception between waves, echo=FALSE}
+
+print(out_rec_year$BUGSoutput$summary)
+```
+
+Using the odds-ratio, the first wave has 1.19 times the odds of choosing
+to receive additional news than the second wave:
+
+```{r Odds-ratio for probability of reception between waves, echo=TRUE}
+# Odds ratio
+pA = out_rec_year$BUGSoutput$mean$p1
+pB = out_rec_year$BUGSoutput$mean$p2
+OR = (pA/(1-pA)) / (pB/(1-pB))
+OR
+```
+
+
+
+
+
+### D. Bayesian models of reception probability between groups
+
+We compare the probabilities of reception p1 and p2 for group 1 and
+group 2:
+
+```{r probability of reception between groups, echo=FALSE}
+
+print(out_rec_group$BUGSoutput$summary)
+```
+
+Using the odds-ratio, the first group has 1.19 times the odds of
+choosing to receive additional news than the second group:
+
+```{r Odds-ratio for probability of reception between groups, echo=TRUE}
+# Odds ratio 2nd group vs 1st group
+pA = out_rec_group$BUGSoutput$mean$p2
+pB = out_rec_group$BUGSoutput$mean$p1
+OR = (pA/(1-pA)) / (pB/(1-pB))
+OR
+```
+
+
+
+
+
+### E. Bayesian models of reception probability between veracity (not used in paper)
+
+We compare the probabilities of reception p1 and p2 for false and true news
+news:
+
+```{r probability of reception between veracity, echo=FALSE}
+
+print(out_rec_veracity$BUGSoutput$summary)
+```
+
+
+
+
+
+### F. Bayesian models of reception probability between judgments
+
+We compare the probabilities of reception p1 and p2 for news judged as
+false and news judged as true:
+
+```{r probability of reception between judgments, echo=FALSE}
+
+print(out_rec_veracity$BUGSoutput$summary)
+```
+
+
+
+
+
+### G. Bayesian models of WTP between waves
+
+We compare the WTP mu1 and mu2 for wave 1 and wave 2
+
+```{r differences in WTP between waves, echo=FALSE}
+
+
+print(out_WTP_year$BUGSoutput$summary)
+```
+
+
+
+
+
+### H. Bayesian models of WTP between groups
+
+We compare the WTP mu1 and mu2 for group 1 and group 2
+
+```{r differences in WTP between groups, echo=FALSE}
+print(out_WTP_group$BUGSoutput$summary)
+```
+
+
+
+
+
+### I. Bayesian models of WTP between reception choices
+
+We compare the WTP mu1 and mu2 for choice not to receive and choice to
+receive
+
+```{r differences in WTP between reception choices, echo=FALSE}
+
+print(out_WTP_rec$BUGSoutput$summary)
+```
+
+
+
+
+
+### J. Bayesian models of WTP between waves for reception choices
+
+We compare the WTP for choices not to receive and choices to receive
+between waves. 
+
+Mu 1 is a choice not to receive in wave 1; mu 2 is a choice to receive in wave 1; 
+mu 3 is a choice not to receive in wave 2; mu 4 is a choice to receive in wave 2:
+
+```{r differences in WTP between waves for reception choices, echo=FALSE}
+
+print(out_WTP_rec_years$BUGSoutput$summary)
+```
+

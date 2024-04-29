@@ -1,0 +1,15 @@
+
+  model{
+
+      for(i in 1:N1) {
+        y1[i] ~ dbin(p1, n1[i])
+      }
+      
+       for(i in 1:N2) {
+        y2[i] ~ dbin(p2, n2[i])
+       }
+       
+      p1 ~ dbeta(alpha, beta)
+      p2 ~ dbeta(alpha, beta)
+
+    delta <- p1 - p2}

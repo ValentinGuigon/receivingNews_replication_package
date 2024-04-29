@@ -1,0 +1,5 @@
+"0","formula(mSuccessOrganization)"
+"1","Success | trials(1) ~ 1 + Theme:orgaBest + (1 | Subject)"
+"1"," "
+"1","
+"

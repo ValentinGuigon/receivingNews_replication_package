@@ -1,0 +1,5 @@
+"0",""
+"0","ggsave(""Imprecision_Bayes_MLM_ctrl_rescaled_effect.bmp"", path = figure_path, width = 5.5, height = 3.5, device='bmp', dpi=300, limitsize=FALSE)"
+"0",""
+"0","# plot doesn't show up inline, don't know why"
+"0",""

@@ -1,0 +1,5 @@
+"0","formula(mSuccessRT)"
+"1","Success | trials(1) ~ 1 + Estimation_RT + (1 | Subject)"
+"1"," "
+"1","
+"
