@@ -86,12 +86,16 @@ success_imprecision_barplot <- ggplot(success_proportion_data_Imprecision_summar
   geom_col(position = position_dodge(width = 0.9), color = "black") +
   geom_errorbar(aes(ymin = Mean_Success - Standard_Error, ymax = Mean_Success + Standard_Error),
                 position = position_dodge(width = 0.9), width = 0.25) +
+  geom_jitter(data = success_proportion_data_Imprecision,
+              aes(x = Imprecision_Valence, y = Proportion_Success),
+              position = position_jitterdodge(jitter.width = 0.2, dodge.width = 0.9),
+              color = gray(0.6), alpha = 1, size = 1) +
   labs(title = "Imprecision",
        x = NULL,
        y = "Correct judgments") +
   theme_minimal() + 
-  theme(axis.text.x = element_text(size = 14, color="black"),  # Adjust x-axis text size
-        axis.text.y = element_text(size = 14, color="black"),  # Adjust y-axis text size
+  theme(axis.text.x = element_text(size = 14, color = "black"),  # Adjust x-axis text size
+        axis.text.y = element_text(size = 14, color = "black"),  # Adjust y-axis text size
         axis.title = element_text(size = 18),
         legend.title = element_text(size = 14), 
         legend.text = element_text(size = 14), 
@@ -103,12 +107,7 @@ success_imprecision_barplot <- ggplot(success_proportion_data_Imprecision_summar
   scale_y_continuous(breaks = seq(0, 1, by = 0.1))
 
 
-
-
-
-
-
-### Polarization
+### POLARIZATION
 # Compute proportion data using the subject-wise mean
 success_proportion_data_Polarization <- dRec_Polarization %>%
   group_by(Polarization_Valence, Veracity, Subject) %>%
@@ -129,15 +128,19 @@ success_Polarization_barplot <- ggplot(success_proportion_data_Polarization_summ
   geom_col(position = position_dodge(width = 0.9), color = "black") +
   geom_errorbar(aes(ymin = Mean_Success - Standard_Error, ymax = Mean_Success + Standard_Error),
                 position = position_dodge(width = 0.9), width = 0.25) +
+  geom_jitter(data = success_proportion_data_Polarization,
+              aes(x = Polarization_Valence, y = Proportion_Success),
+              position = position_jitterdodge(jitter.width = 0.2, dodge.width = 0.9),
+              color = gray(0.6), alpha = 1, size = 1) +
   labs(title = "Polarization",
        x = NULL,
        y = NULL) +
   theme_minimal() +
-  theme(axis.text.x = element_text(size = 14, color="black"),  # Adjust x-axis text size
-        axis.text.y = element_text(size = 14, color="black"),  # Adjust y-axis text size
-        axis.title = element_text(size = 18)) +
-  theme(legend.title = element_text(size = 18)) + 
-  theme(legend.text = element_text(size = 18),
+  theme(axis.text.x = element_text(size = 14, color = "black"),  # Adjust x-axis text size
+        axis.text.y = element_text(size = 14, color = "black"),  # Adjust y-axis text size
+        axis.title = element_text(size = 18),
+        legend.title = element_text(size = 18),
+        legend.text = element_text(size = 18),
         axis.title.y = element_text(size = 18),
         axis.title.x = element_text(size = 18),
         plot.title = element_text(size = 20, hjust = 0.5)) +  # Adjust title size
@@ -173,6 +176,10 @@ judgment_imprecision_barplot <- ggplot(judgment_proportion_data_Imprecision_summ
   geom_col(position = position_dodge(width = 0.9), color = "black") +
   geom_errorbar(aes(ymin = Mean_Judgment - Standard_Error, ymax = Mean_Judgment + Standard_Error),
                 position = position_dodge(width = 0.9), width = 0.25) +
+  geom_jitter(data = judgment_proportion_data_Imprecision,
+              aes(x = Imprecision_Valence, y = Proportion_Judgment),
+              position = position_jitterdodge(jitter.width = 0.2, dodge.width = 0.9),
+              color = gray(0.6), alpha = 1, size = 1) +
   labs(title = "Imprecision",
        x = NULL,
        y = "Judgments as true") +
@@ -214,6 +221,10 @@ judgment_Polarization_barplot <- ggplot(judgment_proportion_data_Polarization_su
   geom_col(position = position_dodge(width = 0.9), color = "black") +
   geom_errorbar(aes(ymin = Mean_Judgment - Standard_Error, ymax = Mean_Judgment + Standard_Error),
                 position = position_dodge(width = 0.9), width = 0.25) +
+  geom_jitter(data = judgment_proportion_data_Polarization,
+              aes(x = Polarization_Valence, y = Proportion_Judgment),
+              position = position_jitterdodge(jitter.width = 0.2, dodge.width = 0.9),
+              color = gray(0.6), alpha = 1, size = 1) +
   labs(title = "Polarization",
        x = NULL,
        y = NULL) +
@@ -235,7 +246,7 @@ judgment_Polarization_barplot <- ggplot(judgment_proportion_data_Polarization_su
 
 
 
-##### SUBJECTS MEAN #####
+##### RECEPTION MEAN #####
 
 ### IMPRECISION
 # Compute proportion data using the subject-wise mean
@@ -258,6 +269,10 @@ reception_imprecision_barplot <- ggplot(reception_proportion_data_Imprecision_su
   geom_col(position = position_dodge(width = 0.9), color = "black") +
   geom_errorbar(aes(ymin = Mean_Reception - Standard_Error, ymax = Mean_Reception + Standard_Error),
                 position = position_dodge(width = 0.9), width = 0.25) +
+  geom_jitter(data = reception_proportion_data_Imprecision,
+              aes(x = Imprecision_Valence, y = Proportion_Reception),
+              position = position_jitterdodge(jitter.width = 0.2, dodge.width = 0.9),
+              color = gray(0.6), alpha = 1, size = 1) +
   labs(title = "Imprecision",
        x = NULL,
        y = "Choices to receive") +
@@ -299,6 +314,10 @@ reception_Polarization_barplot <- ggplot(reception_proportion_data_Polarization_
   geom_col(position = position_dodge(width = 0.9), color = "black") +
   geom_errorbar(aes(ymin = Mean_Reception - Standard_Error, ymax = Mean_Reception + Standard_Error),
                 position = position_dodge(width = 0.9), width = 0.25) +
+  geom_jitter(data = reception_proportion_data_Polarization,
+              aes(x = Polarization_Valence, y = Proportion_Reception),
+              position = position_jitterdodge(jitter.width = 0.2, dodge.width = 0.9),
+              color = gray(0.6), alpha = 1, size = 1) +
   labs(title = "Polarization",
        x = NULL,
        y = NULL) +

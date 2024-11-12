@@ -756,37 +756,74 @@ variables = ["judgment_per_dist", "success_per_dist", "seeking_per_dist", "WTP_r
 
 
 for j = 1:3
-    h = figure; T = tiledlayout(1,1,'TileSpacing','compact');
-    taille=16; set(h, 'DefaultTextFontSize', taille); set(T, 'DefaultTextFontSize', taille);
-    ylabel(T,'Proportion (%)','FontSize',taille); x = categorical(theme_names);
+    h = figure; 
+    T = tiledlayout(1,1,'TileSpacing','compact');
+    taille = 16; 
+    set(h, 'DefaultTextFontSize', taille); 
+    set(T, 'DefaultTextFontSize', taille);
+    ylabel(T, 'Proportion (%)', 'FontSize', taille); 
+    x = categorical(theme_names);
     
-    nexttile; hold on
-    if j < 4
-        ylim([0.3 0.71]); 
-        line([0.5 2.5], [0.5 0.5], 'Color',[.7 .7 .7],'LineStyle','--')
-    else
-        ylim([0 10]); 
-        line([0.5 2.5], [5 5], 'Color',[.7 .7 .7],'LineStyle','--')
+    data = data_per_dist.(variables(j));
+    data = struct('pro_ecology', data.pro.ecology, 'pro_democracy', data.pro.democracy, 'pro_socjust', data.pro.socjust, ...
+    'con_ecology', data.con.ecology, 'con_democracy', data.con.democracy, 'con_socjust', data.con.socjust);
+    fields = fieldnames(data);
+    
+    nexttile; 
+    hold on;
+    ylim([0 1]);
+    line([0.5 2.5], [0.5 0.5], 'Color', [.7 .7 .7], 'LineStyle', '--')
+    
+    y = [mean(data.pro_ecology(:),'omitnan') mean(data.pro_democracy(:),'omitnan') mean(data.pro_socjust(:),'omitnan');
+         mean(data.con_ecology(:),'omitnan') mean(data.con_democracy(:),'omitnan') mean(data.con_socjust(:),'omitnan')];
+     
+    errors = [std(data.pro_ecology(:),'omitnan') / sqrt(numel(data.pro_ecology(:))) ...
+                  std(data.pro_democracy(:),'omitnan') / sqrt(numel(data.pro_democracy(:))) ...
+                  std(data.pro_socjust(:),'omitnan') / sqrt(numel(data.pro_socjust(:)));
+                  std(data.con_ecology(:),'omitnan') / sqrt(numel(data.con_ecology(:))) ...
+                  std(data.con_democracy(:),'omitnan') / sqrt(numel(data.con_democracy(:))) ...
+                  std(data.con_socjust(:),'omitnan') / sqrt(numel(data.con_socjust(:)))];
+    
+    b = bar(y, 'grouped');
+    [ngroups, nbars] = size(y);
+    x = nan(nbars, ngroups);
+    for i = 1:nbars
+        x(i, :) = b(i).XEndPoints;
     end
-    y = [mean(data_per_dist.(variables(j)).pro.ecology(:),'omitnan') mean(data_per_dist.(variables(j)).pro.democracy(:),'omitnan') mean(data_per_dist.(variables(j)).pro.socjust(:),'omitnan');
-        mean(data_per_dist.(variables(j)).con.ecology(:),'omitnan') mean(data_per_dist.(variables(j)).con.democracy(:),'omitnan') mean(data_per_dist.(variables(j)).con.socjust(:),'omitnan')];
-    b = bar(y);
-    title(variable_names(j)); xticks([1 2]); set(gca,'xticklabel',{'Alignment'; 'Misalignment'});
-    xtickangle(15)
     
-    lg = legend([b(1),b(2),b(3)],{'Ecology','Democracy','Social justice'}, 'Orientation', 'horizontal', 'location','northoutside');
-    set(lg,'Box','off')
+    jitter_amount = 0.01;
+    for k = 1:nbars*ngroups
+        data_values = data.(string(fields{k}));
+        jittered_x = x(k) + jitter_amount * randn(size(data_values));
+        scatter(jittered_x, data_values, 10, 'MarkerEdgeColor', [0.6 0.6 0.6], 'MarkerFaceColor', [0.8 0.8 0.8], 'MarkerFaceAlpha', 0.5);
+    end
     
-    saveas(gcf, strcat(project_root,'/outputs/figures/Matlab/', variables(j), 'per_theme.png'))
-    saveas(gcf, strcat(project_root,'/outputs/figures/Matlab/', variables(j), 'per_theme.tif'))
+    errorbar(x', y, errors, 'k', 'LineStyle', 'none', 'LineWidth', 0.9);
+    
+    title(variable_names(j)); 
+    xticks([1 2]); 
+    set(gca, 'xticklabel', {'Alignment'; 'Misalignment'});
+    xtickangle(15);
+    lg = legend(b, {'Ecology', 'Democracy', 'Social justice'}, 'Orientation', 'horizontal', 'Location', 'northoutside');
+    set(lg, 'Box', 'off');
+    
+    saveas(gcf, strcat(project_root, '/outputs/figures/Matlab/', variables(j), 'per_theme.png'))
+    saveas(gcf, strcat(project_root, '/outputs/figures/Matlab/', variables(j), 'per_theme.tif'))
 end
 
+
 for j = 1:3
-    h = figure; T = tiledlayout(1,1,'TileSpacing','compact');
-    taille=16; set(h, 'DefaultTextFontSize', taille); set(T, 'DefaultTextFontSize', taille);
-    ylabel(T,'Proportion (%)','FontSize',taille); x = categorical(theme_names);
+    h = figure; 
+    T = tiledlayout(1,1,'TileSpacing','compact');
+    taille = 16; 
+    set(h, 'DefaultTextFontSize', taille); 
+    set(T, 'DefaultTextFontSize', taille);
+    ylabel(T,'Proportion (%)','FontSize',taille); 
+    x = categorical(theme_names);
     
-    nexttile; hold on
+    nexttile; 
+    hold on;
+    
     if j < 4
         ylim([0.3 0.71]); 
         line([0 3], [0.5 0.5], 'Color',[.7 .7 .7],'LineStyle','--')
@@ -794,39 +831,88 @@ for j = 1:3
         ylim([0 10]); 
         line([0 3], [5 5], 'Color',[.7 .7 .7],'LineStyle','--')
     end
-    y = [mean(data_per_dist.(variables(j)).pro.pooled(:),'omitnan'); mean(data_per_dist.(variables(j)).con.pooled(:),'omitnan')];
-    bar(y)
-    title(variable_names(j)); xticks([1 2]); set(gca,'xticklabel',{'Alignment'; 'Misalignment'}); 
-    xtickangle(15)
     
-    saveas(gcf, strcat(project_root,'/outputs/figures/Matlab/', variables(j), '.png'))
-    saveas(gcf, strcat(project_root,'/outputs/figures/Matlab/', variables(j), '.tif'))
+    pro_data = data_per_dist.(variables(j)).pro.pooled(:);
+    con_data = data_per_dist.(variables(j)).con.pooled(:);
+    
+    y = [mean(pro_data, 'omitnan'); mean(con_data, 'omitnan')];
+    errors = [std(pro_data, 'omitnan') / sqrt(numel(pro_data)); 
+              std(con_data, 'omitnan') / sqrt(numel(con_data))];
+    
+    b = bar(y);
+    errorbar(1:2, y, errors, 'k', 'LineStyle', 'none', 'LineWidth', 0.9);
+    
+    jitter_amount = 0.05;
+    scatter(1 + jitter_amount * randn(size(pro_data)), pro_data, 10, 'MarkerEdgeColor', [0.6 0.6 0.6], 'MarkerFaceColor', [0.8 0.8 0.8], 'MarkerFaceAlpha', 0.5);
+    scatter(2 + jitter_amount * randn(size(con_data)), con_data, 10, 'MarkerEdgeColor', [0.6 0.6 0.6], 'MarkerFaceColor', [0.8 0.8 0.8], 'MarkerFaceAlpha', 0.5);
+    
+    title(variable_names(j)); 
+    xticks([1 2]); 
+    set(gca,'xticklabel',{'Alignment'; 'Misalignment'}); 
+    xtickangle(15);
+    
+    saveas(gcf, strcat(project_root,'/outputs/figures/Matlab/', variables(j), '.png'));
+    saveas(gcf, strcat(project_root,'/outputs/figures/Matlab/', variables(j), '.tif'));
 end
+
 
 
 h = figure; T = tiledlayout(1,2,'TileSpacing','compact');
 taille=16; set(h, 'DefaultTextFontSize', taille); set(T, 'DefaultTextFontSize', taille);
 ylabel(T,'Willingness-To-Pay (ECU)','FontSize',taille); x = categorical(theme_names);
 for j = 4:5
-    ax = nexttile; hold on
-    if j < 4
-        ylim([0.3 0.71]); 
-        line([0.5 2.5], [0.5 0.5], 'Color',[.7 .7 .7],'LineStyle','--')
-    else
-        ylim([0 15]); xlim([0.5 2.5]); 
-        line([0.5 2.5], [5 5], 'Color',[.7 .7 .7],'LineStyle','--', 'HandleVisibility','off')
+    ax = nexttile; 
+    hold on;
+    
+    ylim([0 15]); 
+    xlim([0.5 2.5]); 
+    line([0.5 2.5], [5 5], 'Color',[.7 .7 .7],'LineStyle','--', 'HandleVisibility','off');
+    
+    pro_ecology = data_per_dist.(variables(j)).pro.ecology(:);
+    pro_democracy = data_per_dist.(variables(j)).pro.democracy(:);
+    pro_socjust = data_per_dist.(variables(j)).pro.socjust(:);
+    
+    con_ecology = data_per_dist.(variables(j)).con.ecology(:);
+    con_democracy = data_per_dist.(variables(j)).con.democracy(:);
+    con_socjust = data_per_dist.(variables(j)).con.socjust(:);
+    
+    y = [mean(pro_ecology, 'omitnan') mean(pro_democracy, 'omitnan') mean(pro_socjust, 'omitnan');
+         mean(con_ecology, 'omitnan') mean(con_democracy, 'omitnan') mean(con_socjust, 'omitnan')];
+    errors = [std(pro_ecology, 'omitnan') / sqrt(numel(pro_ecology)) std(pro_democracy, 'omitnan') / sqrt(numel(pro_democracy)) std(pro_socjust, 'omitnan') / sqrt(numel(pro_socjust));
+              std(con_ecology, 'omitnan') / sqrt(numel(con_ecology)) std(con_democracy, 'omitnan') / sqrt(numel(con_democracy)) std(con_socjust, 'omitnan') / sqrt(numel(con_socjust))];
+    
+    b = bar(y, 'grouped');
+    bar_colors = [b(1).FaceColor; b(2).FaceColor; b(3).FaceColor];
+    [ngroups, nbars] = size(y);
+    x = nan(nbars, ngroups);
+    for i = 1:nbars
+        x(i, :) = b(i).XEndPoints;
     end
-    y = [mean(data_per_dist.(variables(j)).pro.ecology(:),'omitnan') mean(data_per_dist.(variables(j)).pro.democracy(:),'omitnan')... 
-        mean(data_per_dist.(variables(j)).pro.socjust(:),'omitnan');
-        mean(data_per_dist.(variables(j)).con.ecology(:),'omitnan') mean(data_per_dist.(variables(j)).con.democracy(:),'omitnan')... 
-        mean(data_per_dist.(variables(j)).con.socjust(:),'omitnan')];
-    b = bar(y);
-    title(variable_names(j)); xticks([1 2]); set(gca,'xticklabel',{'Alignment'; 'Misalignment'});
-    xtickangle(15)
+    
+    scatter_x_offsets = 0.05;
+    scatter(x(1, 1) + scatter_x_offsets * randn(size(pro_ecology)), pro_ecology, 15, ...
+        'MarkerEdgeColor', [0.7 0.7 0.7], 'MarkerFaceColor', bar_colors(1,:) * 0.8, 'MarkerFaceAlpha', 0.6);
+    scatter(x(2, 1) + scatter_x_offsets * randn(size(pro_democracy)), pro_democracy, 15, ...
+        'MarkerEdgeColor', [0.7 0.7 0.7], 'MarkerFaceColor', bar_colors(2,:) * 0.8, 'MarkerFaceAlpha', 0.6);
+    scatter(x(3, 1) + scatter_x_offsets * randn(size(pro_socjust)), pro_socjust, 15, ...
+        'MarkerEdgeColor', [0.7 0.7 0.7], 'MarkerFaceColor', bar_colors(3,:) * 0.8, 'MarkerFaceAlpha', 0.6);
+    scatter(x(1, 2) + scatter_x_offsets * randn(size(con_ecology)), con_ecology, 15, ...
+        'MarkerEdgeColor', [0.7 0.7 0.7], 'MarkerFaceColor', bar_colors(1,:) * 0.8, 'MarkerFaceAlpha', 0.6);
+    scatter(x(2, 2) + scatter_x_offsets * randn(size(con_democracy)), con_democracy, 15, ...
+        'MarkerEdgeColor', [0.7 0.7 0.7], 'MarkerFaceColor', bar_colors(2,:) * 0.8, 'MarkerFaceAlpha', 0.6);
+    scatter(x(3, 2) + scatter_x_offsets * randn(size(con_socjust)), con_socjust, 15, ...
+        'MarkerEdgeColor', [0.7 0.7 0.7], 'MarkerFaceColor', bar_colors(3,:) * 0.8, 'MarkerFaceAlpha', 0.6);
+    
+    errorbar(x', y, errors, 'k', 'LineStyle', 'none', 'LineWidth', 0.9);
+    
+    title(variable_names(j)); 
+    xticks([1 2]); 
+    set(gca, 'xticklabel', {'Alignment', 'Misalignment'});
+    xtickangle(15);
 end
-lg = legend(ax, b(:),{'Ecology','Democracy','Social justice'}, 'Orientation', 'horizontal', 'location','northoutside');
+lg = legend(ax, b(:), {'Ecology', 'Democracy', 'Social justice'}, 'Orientation', 'horizontal', 'Location', 'northoutside');
 lg.Layout.Tile = 'North';
-set(lg,'Box','off')
+set(lg, 'Box', 'off');
     
 saveas(gcf, strcat(project_root,'/outputs/figures/Matlab/', 'WTP', 'per_theme.png'))
 saveas(gcf, strcat(project_root,'/outputs/figures/Matlab/', 'WTP', 'per_theme.tif'))

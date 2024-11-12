@@ -11,11 +11,12 @@ gc() #free up memory and report the memory usage
 # install.packages("rstan", repos = "https://cloud.r-project.org/", dependencies = TRUE)
 # verify the installation: example(stan_model, package = "rstan", run.dontrun = TRUE)
 # devtools::install_github("rmcelreath/rethinking")
+# devtools::install_version("BEST", version = "0.5.4", repos = "http://cran.us.r-project.org")
 # In case of need: install.packages("cmdstanr", repos = c("https://mc-stan.org/r-packages/", getOption("repos")))
 
-list.of.packages <- c("brms", "rstan", "rjags", "mcmc", "rethinking", "StanHeaders"
+list.of.packages <- c("brms", "rstan", "rjags", "mcmc", "StanHeaders"
                       , "tidyverse", "modelr", "ks", "bayestestR", "logspline"
-                      , "tidybayes", "bayesplot", "BEST", "ggplot2", "see", "GGally"
+                      , "tidybayes", "bayesplot", "ggplot2", "see", "GGally"
                       , "dplyr", "scales", "pracma"
                       , "rprojroot") 
 {
@@ -23,7 +24,6 @@ list.of.packages <- c("brms", "rstan", "rjags", "mcmc", "rethinking", "StanHeade
   if(length(new.packages)) install.packages(new.packages)
   lapply(list.of.packages, require, character.only = TRUE)
 }
-
 
 # set paths and mk necessary directories
 set.seed(12345)
@@ -76,6 +76,9 @@ dRec$Polarization = Polarization
 dRec$Imprecision = scale(dRec$Imprecision, center=FALSE, scale=TRUE)
 dRec$Polarization = scale(dRec$Polarization, center=FALSE, scale=TRUE)
 
+# We standardize Confidence
+dRec$Confidence = scale(dRec$Confidence, center=TRUE, scale=TRUE)
+
 
 
 
@@ -91,10 +94,7 @@ dRec$Polarization = scale(dRec$Polarization, center=FALSE, scale=TRUE)
 
 
 
-########## MODELS OF SUCCESS ##########
-
-
-##### PRIORS #####
+########## MODELS OF SUCCESS: PRIORS ##########
 
 prior_random <- c(
   prior(beta(0.5, 0.5), class = Intercept))
@@ -112,7 +112,7 @@ priorLM <- c(
 
 
 
-##### MODELS #####
+##### MODELS OF SUCCESS: MODELS #####
 
 mSuccessRandom <- brm(
   Success | trials(1) ~ (1|Subject),
@@ -204,6 +204,18 @@ mSuccessOrganization <- brm(
   data = dRec_Organizations, 
   control = list(adapt_delta = 0.85))
 
+mSuccessConfidence <- brm(
+  Success | trials(1) ~ 1 + Confidence + (1|Subject),
+  family = binomial(link = "logit"),
+  prior = priorLM,
+  sample_prior = "yes", 
+  iter = 10000,
+  warmup = 1500,
+  thin = 1,
+  data = dRec, 
+  control = list(adapt_delta = 0.85),
+  save_pars = save_pars(all = TRUE))
+
 
 
 
@@ -225,7 +237,7 @@ mSuccessImprecPolar_controlled <- brm(
 
 
 
-##### MODELS COMPARISON #####
+##### MODELS OF SUCCESS: COMPARISON #####
 
 mSuccessRandom <- add_criterion(mSuccessRandom, "waic")
 mSuccessSubject <- add_criterion(mSuccessSubject, "waic")
@@ -235,6 +247,7 @@ mSuccessImprecision <- add_criterion(mSuccessImprecision, "waic")
 mSuccessPolarization <- add_criterion(mSuccessPolarization, "waic")
 mSuccessImprecPolar <- add_criterion(mSuccessImprecPolar, "waic")
 mSuccessOrganization <- add_criterion(mSuccessOrganization, "waic")
+mSuccessConfidence <- add_criterion(mSuccessConfidence, "waic")
 
 mSuccessRandom <- add_criterion(mSuccessRandom, "loo")
 mSuccessSubject <- add_criterion(mSuccessSubject, "loo")
@@ -244,6 +257,7 @@ mSuccessImprecision <- add_criterion(mSuccessImprecision, "loo")
 mSuccessPolarization <- add_criterion(mSuccessPolarization, "loo")
 mSuccessImprecPolar <- add_criterion(mSuccessImprecPolar, "loo")
 mSuccessOrganization <- add_criterion(mSuccessOrganization, "loo")
+mSuccessConfidence <- add_criterion(mSuccessConfidence, "loo")
 
 
 ## Hypothesis testing
@@ -274,6 +288,30 @@ left_join(model_comparison_table_Success, weights_Success, by = "model")
 
 #Summary of the winner model
 summary(mSuccessImprecPolar) # marginal means in odds ratio
+
+
+
+
+
+##### SUCCESS - CONFIDENCE RELATIONSHIP #####
+
+# Model summary
+Confidence_summary = summary(mSuccessConfidence)
+
+# Bayes R²
+Confidence_bayesR2 = bayes_R2(mSuccessConfidence)
+
+# Bayes Factor for interval null
+parameters_bf_interval = bayesfactor_parameters(mSuccessConfidence, null = c(-0.1, 0.1))
+
+# Interpretation of Bayes Factor
+parameters_bf_interval_interpret = effectsize::interpret_bf(exp(parameters_bf_interval$log_BF[2]), include_value = TRUE)
+
+# ROPE analysis
+rope_confidence = rope(mSuccessConfidence, range = c(-0.1, 0.1), parameters = "Confidence")
+
+# Support Interval
+Confidence_si <- si(mSuccessConfidence, BF = 1, verbose = FALSE)
 
 
 

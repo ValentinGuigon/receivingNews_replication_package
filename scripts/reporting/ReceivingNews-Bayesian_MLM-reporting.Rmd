@@ -1,8 +1,11 @@
 ---
 title: "Receiving news - Bayesian Mixed Linear Models"
-editor_options: 
-  markdown: 
+editor_options:
+  markdown:
     wrap: 72
+output:
+  html_document:
+    df_print: paged
 ---
 
 ```         
@@ -33,7 +36,7 @@ list.of.packages <- c("devtools"
                       , "tidybayes", "bayesplot", "ggplot2", "see", "GGally"
                       , "ggokabeito", "ggthemes"
                       , "dplyr"
-                      , "rethinking", "BEST") 
+                      , "rethinking", "bayestestR") 
 {
   new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
   if(length(new.packages)) install.packages(new.packages)
@@ -52,8 +55,7 @@ figure_path = (paste(project_root, "/outputs/figures/R", sep=""))
 
 # Models
 
-We compute Bayesian Mixed Linear Models (MLM) for our main hypothesis on participants' performances
-in estimating veracity, as well as alternative models. Computations use 4 mcmc chains, 4000 iterations each plus 1500 warmup iterations each. We use weakly informative priors with 
+We compute Bayesian Mixed Linear Models (MLM) for our main hypothesis on participants' performances in estimating veracity, as well as alternative models. Computations use 4 mcmc chains, 4000 iterations each plus 1500 warmup iterations each. We use weakly informative priors with 
 mu[0,1] and sigma[0,1], except for the non-informative beta response model.
 
 First, we computed a non-informative beta response model to model randomness 
@@ -95,9 +97,56 @@ formula(mSuccessImprecPolar)
 ```
 
 
-Finally, we computed the model of stickiness of prior knowledge:
+We computed the model of stickiness of prior knowledge:
 ```{r, echo=FALSE}
 formula(mSuccessOrganization)
+```
+
+
+Finally, we computed the relationship between confidence and success:
+```{r, echo=FALSE}
+formula(mSuccessConfidence)
+```
+
+
+
+
+
+# Relationship confidence - accuracy (success)
+
+We represented the relationship confidence - accuracy with a model of success as explained by the intercept, the confidence and individual-level intercepts (random effect). The Confidence predictor was standardized and we used the weakly informative priors.
+
+The Bayesian analysis provides strong evidence for the absence of a meaningful relationship between Confidence and Success. The model summary indicates a small positive coefficient for Confidence (β = 0.05, 95% CI [0.02, 0.09]). However, further analysis reveals this effect to be practically insignificant.
+
+The Bayesian R² indicates that Confidence explains only about 0.12% of the variance in Success, suggesting a negligible effect size:
+
+``` {r, echo=FALSE}
+Confidence_bayesR2
+```
+
+100% of the posterior distribution for the Confidence coefficient falls within the [-0.1, 0.1] ROPE, providing strong evidence that the effect, while non-zero, is practically equivalent to no effect:
+
+``` {r, echo=FALSE}
+rope_confidence
+```
+
+The interval null Bayes Factor provides extreme evidence against a meaningful effect of Confidence on Success, strongly favoring the null hypothesis of no effect within the [-0.1, 0.1] interval:
+
+``` {r, echo=FALSE}
+parameters_bf_interval_interpret[1]
+```
+
+The support interval for Confidence [0.00, 0.10] further corroborates the finding of a negligible effect, as it barely excludes zero and is entirely contained within the ROPE:
+
+``` {r, echo=FALSE}
+Confidence_si
+plot(Confidence_si)
+
+bmp(file=paste(project_root, "/outputs/figures/R/Confidence_effect_Support_Interval.bmp", sep=""),
+    width=550, height=350)
+plot_Confidence_si = plot(Confidence_si)
+plot_Confidence_si
+dev.off()
 ```
 
 
@@ -106,8 +155,7 @@ formula(mSuccessOrganization)
 
 # Models comparison
 
-The Bayesian Mixed Linear Model that explains best participants' performances is the 
-model of news content imprecision & Polarization with both variables interacting with news veracity.
+The Bayesian Mixed Linear Model that explains best participants' performances is the model of news content imprecision & Polarization with both variables interacting with news veracity.
 
 ``` {r, echo=FALSE}
 left_join(model_comparison_table_Success, weights_Success, by = "model")
@@ -128,7 +176,7 @@ summary(mSuccessImprecPolar)  # marginal means in odds ratio
 # Winning model: Posterior estimated effects
 
 We ran a second version of the model, with controls such as the NHST imprecision model:
-```{r, echo=FALSE}
+```{r, echo=FALSE, warning=FALSE}
 summary(mSuccessImprecPolar_controlled) 
 ```
 
@@ -141,7 +189,7 @@ mod = mSuccessImprecPolar_controlled
 plot_ImprecPolar_MLM_controlled_effect = plot(conditional_effects(mod), ask="FALSE")
 ```
 
-```{r, echo=FALSE, results='hide'}
+```{r, echo=FALSE, results='hide', message=FALSE}
 
 bmp(file=paste(project_root, "/outputs/figures/R/Imprecision_Bayes_MLM_ctrl_effect.bmp", sep=""),
     width=550, height=350)
@@ -312,17 +360,16 @@ for the 3 GLM parameters and variation is contained:
 convergence_plot = mod %>% 
   plot(pars = "^b_", combo = c("dens_overlay", "trace"), widths = c(1, 1.5), theme = theme_bw(base_size = 9, base_family = "Open Sans")  )
 
-<<<<<<< HEAD
+
 bmp(file=paste(project_root, "/outputs/figures/R/Imprecision_Bayes_MLM_convergence.bmp", sep=""),
     width=550, height=350)
 mod %>% 
   plot(pars = "^b_", combo = c("dens_overlay", "trace"), widths = c(1, 1.5), theme = theme_bw(base_size = 14, base_family = "Open Sans")  )
 dev.off()
-=======
+
 convergence_plot = mod %>% plot(pars = "^b_", theme = theme_bw(base_size = 11, base_family = "Open Sans"), widths = c(1, 1.1))
 
 ggsave("Imprecision_Bayes_MLM_convergence.png", plot = convergence_plot[[1]], path = figure_path, width = 6, height = 4.5, device='png', dpi=300, limitsize=FALSE)
->>>>>>> e1e3bd4692dad8f82a3decbbc19e654e540b9472
 
 ```
   
@@ -360,16 +407,14 @@ autocorrelation_plot = bayesplot_grid(
                   "True news")
 )
 
-<<<<<<< HEAD
 bmp(file=paste(project_root, "/outputs/figures/R/Imprecision_Bayes_MLM_autocorrelation.bmp", sep=""),
     width=1100, height=700)
 bayesplot_grid(plot_False, plot_True, grid_args = list(ncol = 2), subtitles = c("False news", "True news"))
 dev.off()
-=======
+
 autocorrelation_plot
 
 ggsave("Imprecision_Bayes_MLM_autocorrelation.png", plot = autocorrelation_plot, path = figure_path, width = 5.5, height = 3.5, device='png', dpi=300, limitsize=FALSE)
->>>>>>> e1e3bd4692dad8f82a3decbbc19e654e540b9472
 
 
 ```
