@@ -49,7 +49,7 @@ load(paste(project_root, "/R_environments/ReceivingNews-Imprec_Polar_figures_env
 
 ```{r, echo=FALSE}
 
-success_combined_plots <- ggarrange(success_imprecision_barplot, success_Polarization_barplot, ncol=2, nrow=1, common.legend = TRUE, legend="top")
+success_combined_plots <- ggarrange(success_imprecision_boxplot, success_Polarization_boxplot, ncol=2, nrow=1, common.legend = TRUE, legend="top")
 success_combined_plots
 ggsave("Rplot_success_imprec_polar_notheme.png", path = figure_path, width = 5.5, height = 3.5, device='png', dpi=300, limitsize=FALSE)
 
@@ -60,7 +60,7 @@ ggsave("Rplot_success_imprec_polar_notheme.png", path = figure_path, width = 5.5
 
 ```{r, echo=FALSE}
 
-judgment_combined_plots <- ggarrange(judgment_imprecision_barplot, judgment_Polarization_barplot, ncol=2, nrow=1, common.legend = TRUE, legend="top")
+judgment_combined_plots <- ggarrange(judgment_imprecision_boxplot, judgment_Polarization_boxplot, ncol=2, nrow=1, common.legend = TRUE, legend="top")
 judgment_combined_plots
 ggsave("Rplot_judgment_imprec_polar_notheme.png", path = figure_path, width = 5.5, height = 3.5, device='png', dpi=300, limitsize=FALSE)
 
@@ -71,7 +71,7 @@ ggsave("Rplot_judgment_imprec_polar_notheme.png", path = figure_path, width = 5.
 
 ```{r, echo=FALSE}
 
-reception_combined_plots <- ggarrange(reception_imprecision_barplot, reception_Polarization_barplot, ncol=2, nrow=1, common.legend = TRUE, legend="top")
+reception_combined_plots <- ggarrange(reception_imprecision_boxplot, reception_Polarization_boxplot, ncol=2, nrow=1, common.legend = TRUE, legend="top")
 reception_combined_plots
 ggsave("Rplot_reception_imprec_polar_notheme.png", path = figure_path, width = 5.5, height = 3.5, device='png', dpi=300, limitsize=FALSE)
 

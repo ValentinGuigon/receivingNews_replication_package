@@ -75,21 +75,9 @@ success_proportion_data_Imprecision <- dRec_Imprecision %>%
 success_proportion_data_Imprecision$Veracity <- factor(success_proportion_data_Imprecision$Veracity, levels = c("False", "True"))
 success_proportion_data_Imprecision$Imprecision_Valence <- factor(success_proportion_data_Imprecision$Imprecision_Valence, levels = c("Precise", "Imprecise"))
 
-# Compute mean and standard error for each combination of Imprecision_Valence and Veracity
-success_proportion_data_Imprecision_summary <- success_proportion_data_Imprecision %>%
-  group_by(Imprecision_Valence, Veracity) %>%
-  summarize(Mean_Success = mean(Proportion_Success),
-            Standard_Error = sd(Proportion_Success) / sqrt(n()))
-
-# Barplot with error bars using geom_col
-success_imprecision_barplot <- ggplot(success_proportion_data_Imprecision_summary, aes(x = Imprecision_Valence, y = Mean_Success, fill = Veracity)) +
-  geom_col(position = position_dodge(width = 0.9), color = "black") +
-  geom_errorbar(aes(ymin = Mean_Success - Standard_Error, ymax = Mean_Success + Standard_Error),
-                position = position_dodge(width = 0.9), width = 0.25) +
-  geom_jitter(data = success_proportion_data_Imprecision,
-              aes(x = Imprecision_Valence, y = Proportion_Success),
-              position = position_jitterdodge(jitter.width = 0.2, dodge.width = 0.9),
-              color = gray(0.6), alpha = 1, size = 1) +
+# Boxplot to show the distribution of the data
+success_imprecision_boxplot <- ggplot(success_proportion_data_Imprecision, aes(x = Imprecision_Valence, y = Proportion_Success, fill = Veracity)) +
+  geom_boxplot(position = position_dodge(width = 0.9), color = "black", width = 0.7) +
   labs(title = "Imprecision",
        x = NULL,
        y = "Correct judgments") +
@@ -117,30 +105,18 @@ success_proportion_data_Polarization <- dRec_Polarization %>%
 success_proportion_data_Polarization$Veracity <- factor(success_proportion_data_Polarization$Veracity, levels = c("False", "True"))
 success_proportion_data_Polarization$Polarization_Valence <- factor(success_proportion_data_Polarization$Polarization_Valence, levels = c("Consensual", "Polarizing"))
 
-# Compute mean and standard error for each combination of Polarization_Valence and Veracity
-success_proportion_data_Polarization_summary <- success_proportion_data_Polarization %>%
-  group_by(Polarization_Valence, Veracity) %>%
-  summarize(Mean_Success = mean(Proportion_Success),
-            Standard_Error = sd(Proportion_Success) / sqrt(n()))
-
-# Barplot with error bars using geom_col
-success_Polarization_barplot <- ggplot(success_proportion_data_Polarization_summary, aes(x = Polarization_Valence, y = Mean_Success, fill = Veracity)) +
-  geom_col(position = position_dodge(width = 0.9), color = "black") +
-  geom_errorbar(aes(ymin = Mean_Success - Standard_Error, ymax = Mean_Success + Standard_Error),
-                position = position_dodge(width = 0.9), width = 0.25) +
-  geom_jitter(data = success_proportion_data_Polarization,
-              aes(x = Polarization_Valence, y = Proportion_Success),
-              position = position_jitterdodge(jitter.width = 0.2, dodge.width = 0.9),
-              color = gray(0.6), alpha = 1, size = 1) +
+# Boxplot to show the distribution of the data
+success_Polarization_boxplot <- ggplot(success_proportion_data_Polarization, aes(x = Polarization_Valence, y = Proportion_Success, fill = Veracity)) +
+  geom_boxplot(position = position_dodge(width = 0.9), color = "black", width = 0.7) +
   labs(title = "Polarization",
        x = NULL,
        y = NULL) +
   theme_minimal() +
   theme(axis.text.x = element_text(size = 14, color = "black"),  # Adjust x-axis text size
         axis.text.y = element_text(size = 14, color = "black"),  # Adjust y-axis text size
-        axis.title = element_text(size = 18),
-        legend.title = element_text(size = 18),
-        legend.text = element_text(size = 18),
+        axis.title = element_text(size = 18)) +
+  theme(legend.title = element_text(size = 18)) + 
+  theme(legend.text = element_text(size = 18),
         axis.title.y = element_text(size = 18),
         axis.title.x = element_text(size = 18),
         plot.title = element_text(size = 20, hjust = 0.5)) +  # Adjust title size
@@ -165,27 +141,15 @@ judgment_proportion_data_Imprecision <- dRec_Imprecision %>%
 judgment_proportion_data_Imprecision$Veracity <- factor(judgment_proportion_data_Imprecision$Veracity, levels = c("False", "True"))
 judgment_proportion_data_Imprecision$Imprecision_Valence <- factor(judgment_proportion_data_Imprecision$Imprecision_Valence, levels = c("Precise", "Imprecise"))
 
-# Compute mean and standard error for each combination of Imprecision_Valence and Veracity
-judgment_proportion_data_Imprecision_summary <- judgment_proportion_data_Imprecision %>%
-  group_by(Imprecision_Valence, Veracity) %>%
-  summarize(Mean_Judgment = mean(Proportion_Judgment),
-            Standard_Error = sd(Proportion_Judgment) / sqrt(n()))
-
-# Barplot with error bars using geom_col
-judgment_imprecision_barplot <- ggplot(judgment_proportion_data_Imprecision_summary, aes(x = Imprecision_Valence, y = Mean_Judgment, fill = Veracity)) +
-  geom_col(position = position_dodge(width = 0.9), color = "black") +
-  geom_errorbar(aes(ymin = Mean_Judgment - Standard_Error, ymax = Mean_Judgment + Standard_Error),
-                position = position_dodge(width = 0.9), width = 0.25) +
-  geom_jitter(data = judgment_proportion_data_Imprecision,
-              aes(x = Imprecision_Valence, y = Proportion_Judgment),
-              position = position_jitterdodge(jitter.width = 0.2, dodge.width = 0.9),
-              color = gray(0.6), alpha = 1, size = 1) +
+# Boxplot to show the distribution of the data
+judgment_imprecision_boxplot <- ggplot(judgment_proportion_data_Imprecision, aes(x = Imprecision_Valence, y = Proportion_Judgment, fill = Veracity)) +
+  geom_boxplot(position = position_dodge(width = 0.9), color = "black", width = 0.7) +
   labs(title = "Imprecision",
        x = NULL,
        y = "Judgments as true") +
   theme_minimal() + 
-  theme(axis.text.x = element_text(size = 14, color="black"),  # Adjust x-axis text size
-        axis.text.y = element_text(size = 14, color="black"),  # Adjust y-axis text size
+  theme(axis.text.x = element_text(size = 14, color = "black"),  # Adjust x-axis text size
+        axis.text.y = element_text(size = 14, color = "black"),  # Adjust y-axis text size
         axis.title = element_text(size = 18),
         legend.title = element_text(size = 14), 
         legend.text = element_text(size = 14), 
@@ -210,27 +174,15 @@ judgment_proportion_data_Polarization <- dRec_Polarization %>%
 judgment_proportion_data_Polarization$Veracity <- factor(judgment_proportion_data_Polarization$Veracity, levels = c("False", "True"))
 judgment_proportion_data_Polarization$Polarization_Valence <- factor(judgment_proportion_data_Polarization$Polarization_Valence, levels = c("Consensual", "Polarizing"))
 
-# Compute mean and standard error for each combination of Polarization_Valence and Veracity
-judgment_proportion_data_Polarization_summary <- judgment_proportion_data_Polarization %>%
-  group_by(Polarization_Valence, Veracity) %>%
-  summarize(Mean_Judgment = mean(Proportion_Judgment),
-            Standard_Error = sd(Proportion_Judgment) / sqrt(n()))
-
-# Barplot with error bars using geom_col
-judgment_Polarization_barplot <- ggplot(judgment_proportion_data_Polarization_summary, aes(x = Polarization_Valence, y = Mean_Judgment, fill = Veracity)) +
-  geom_col(position = position_dodge(width = 0.9), color = "black") +
-  geom_errorbar(aes(ymin = Mean_Judgment - Standard_Error, ymax = Mean_Judgment + Standard_Error),
-                position = position_dodge(width = 0.9), width = 0.25) +
-  geom_jitter(data = judgment_proportion_data_Polarization,
-              aes(x = Polarization_Valence, y = Proportion_Judgment),
-              position = position_jitterdodge(jitter.width = 0.2, dodge.width = 0.9),
-              color = gray(0.6), alpha = 1, size = 1) +
+# Boxplot to show the distribution of the data
+judgment_Polarization_boxplot <- ggplot(judgment_proportion_data_Polarization, aes(x = Polarization_Valence, y = Proportion_Judgment, fill = Veracity)) +
+  geom_boxplot(position = position_dodge(width = 0.9), color = "black", width = 0.7) +
   labs(title = "Polarization",
        x = NULL,
        y = NULL) +
   theme_minimal() +
-  theme(axis.text.x = element_text(size = 14, color="black"),  # Adjust x-axis text size
-        axis.text.y = element_text(size = 14, color="black"),  # Adjust y-axis text size
+  theme(axis.text.x = element_text(size = 14, color = "black"),  # Adjust x-axis text size
+        axis.text.y = element_text(size = 14, color = "black"),  # Adjust y-axis text size
         axis.title = element_text(size = 18)) +
   theme(legend.title = element_text(size = 18)) + 
   theme(legend.text = element_text(size = 18),
@@ -258,27 +210,15 @@ reception_proportion_data_Imprecision <- dRec_Imprecision %>%
 reception_proportion_data_Imprecision$Veracity <- factor(reception_proportion_data_Imprecision$Veracity, levels = c("False", "True"))
 reception_proportion_data_Imprecision$Imprecision_Valence <- factor(reception_proportion_data_Imprecision$Imprecision_Valence, levels = c("Precise", "Imprecise"))
 
-# Compute mean and standard error for each combination of Imprecision_Valence and Veracity
-reception_proportion_data_Imprecision_summary <- reception_proportion_data_Imprecision %>%
-  group_by(Imprecision_Valence, Veracity) %>%
-  summarize(Mean_Reception = mean(Proportion_Reception),
-            Standard_Error = sd(Proportion_Reception) / sqrt(n()))
-
-# Barplot with error bars using geom_col
-reception_imprecision_barplot <- ggplot(reception_proportion_data_Imprecision_summary, aes(x = Imprecision_Valence, y = Mean_Reception, fill = Veracity)) +
-  geom_col(position = position_dodge(width = 0.9), color = "black") +
-  geom_errorbar(aes(ymin = Mean_Reception - Standard_Error, ymax = Mean_Reception + Standard_Error),
-                position = position_dodge(width = 0.9), width = 0.25) +
-  geom_jitter(data = reception_proportion_data_Imprecision,
-              aes(x = Imprecision_Valence, y = Proportion_Reception),
-              position = position_jitterdodge(jitter.width = 0.2, dodge.width = 0.9),
-              color = gray(0.6), alpha = 1, size = 1) +
+# Boxplot to show the distribution of the data
+reception_imprecision_boxplot <- ggplot(reception_proportion_data_Imprecision, aes(x = Imprecision_Valence, y = Proportion_Reception, fill = Veracity)) +
+  geom_boxplot(position = position_dodge(width = 0.9), color = "black", width = 0.7) +
   labs(title = "Imprecision",
        x = NULL,
        y = "Choices to receive") +
   theme_minimal() + 
-  theme(axis.text.x = element_text(size = 14, color="black"),  # Adjust x-axis text size
-        axis.text.y = element_text(size = 14, color="black"),  # Adjust y-axis text size
+  theme(axis.text.x = element_text(size = 14, color = "black"),  # Adjust x-axis text size
+        axis.text.y = element_text(size = 14, color = "black"),  # Adjust y-axis text size
         axis.title = element_text(size = 18),
         legend.title = element_text(size = 14), 
         legend.text = element_text(size = 14), 
@@ -303,27 +243,15 @@ reception_proportion_data_Polarization <- dRec_Polarization %>%
 reception_proportion_data_Polarization$Veracity <- factor(reception_proportion_data_Polarization$Veracity, levels = c("False", "True"))
 reception_proportion_data_Polarization$Polarization_Valence <- factor(reception_proportion_data_Polarization$Polarization_Valence, levels = c("Consensual", "Polarizing"))
 
-# Compute mean and standard error for each combination of Polarization_Valence and Veracity
-reception_proportion_data_Polarization_summary <- reception_proportion_data_Polarization %>%
-  group_by(Polarization_Valence, Veracity) %>%
-  summarize(Mean_Reception = mean(Proportion_Reception),
-            Standard_Error = sd(Proportion_Reception) / sqrt(n()))
-
-# Barplot with error bars using geom_col
-reception_Polarization_barplot <- ggplot(reception_proportion_data_Polarization_summary, aes(x = Polarization_Valence, y = Mean_Reception, fill = Veracity)) +
-  geom_col(position = position_dodge(width = 0.9), color = "black") +
-  geom_errorbar(aes(ymin = Mean_Reception - Standard_Error, ymax = Mean_Reception + Standard_Error),
-                position = position_dodge(width = 0.9), width = 0.25) +
-  geom_jitter(data = reception_proportion_data_Polarization,
-              aes(x = Polarization_Valence, y = Proportion_Reception),
-              position = position_jitterdodge(jitter.width = 0.2, dodge.width = 0.9),
-              color = gray(0.6), alpha = 1, size = 1) +
+# Boxplot to show the distribution of the data
+reception_Polarization_boxplot <- ggplot(reception_proportion_data_Polarization, aes(x = Polarization_Valence, y = Proportion_Reception, fill = Veracity)) +
+  geom_boxplot(position = position_dodge(width = 0.9), color = "black", width = 0.7) +
   labs(title = "Polarization",
        x = NULL,
        y = NULL) +
   theme_minimal() +
-  theme(axis.text.x = element_text(size = 14, color="black"),  # Adjust x-axis text size
-        axis.text.y = element_text(size = 14, color="black"),  # Adjust y-axis text size
+  theme(axis.text.x = element_text(size = 14, color = "black"),  # Adjust x-axis text size
+        axis.text.y = element_text(size = 14, color = "black"),  # Adjust y-axis text size
         axis.title = element_text(size = 18)) +
   theme(legend.title = element_text(size = 18)) + 
   theme(legend.text = element_text(size = 18),

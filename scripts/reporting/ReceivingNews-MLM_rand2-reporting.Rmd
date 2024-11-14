@@ -20,7 +20,7 @@ gc() #free up memory and report the memory usage
 list.of.packages <- c("lme4", "ggplot2", "sjPlot", "emmeans", "interactions", "jtools", 
                       "tidyverse", "ggpubr", "mediation", "RColorBrewer",
                       "flextable", "rprojroot", "webshot", "stargazer", 
-                      "devtools", "lavaan", "lavaanExtra") 
+                      "devtools", "lavaan", "lavaanExtra", "png", "rsvg", "DiagrammeRsvg") 
 {
   new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
   if(length(new.packages)) install.packages(new.packages)
@@ -124,6 +124,7 @@ The success rate was significantly higher for ecology-related and social justice
 ```{r MLM of success: Better performances for true news: emmeans pairs, echo=FALSE}
 
 estSuccess_truth_themes_pairs # gives comparisons odds-ratio
+estSuccess_truth_themes_pairs_ci
 # estSuccess_truth_themes_size # gives comparisons effect size
 
 ```
@@ -141,6 +142,7 @@ The three themes elicit more success when the news are true than false:
 ```{r MLM of success: Better performances for true news: emmeans pairs 2, echo=FALSE}
 
 estSuccess_truth_themes_pairs2 # gives comparisons odds-ratio
+estSuccess_truth_themes_pairs2_ci
 
 ```
 
@@ -208,6 +210,7 @@ Participants were significantly better at predicting the veracity of true news t
 ```{r MLM of success: Biased in judgment: emmeans pairs, echo=FALSE}
 
 estSuccess_truth_judgment_pairs
+estSuccess_truth_judgment_pairs_ci
 # estSuccess_truth_judgment_size
 
 ```
@@ -276,6 +279,7 @@ Participants were significantly more likely to judge a news as true when the new
 ```{r MLM of judgment: Biased in judgment: emmeans pairs, echo=FALSE}
 
 estJudgment_truth_theme_pairs
+estJudgment_truth_theme_pairs_ci
 # estJudgment_truth_theme_size
 
 ```
@@ -293,6 +297,7 @@ News about ecology or social justice elicit more judgments as true when the news
 ```{r MLM of judgment: Biased in judgment: emmeans pairs 2, echo=FALSE}
 
 estJudgment_truth_theme_pairs2 # gives comparisons odds-ratio
+estJudgment_truth_theme_pairs2_ci
 
 ```
 
@@ -357,16 +362,17 @@ estSuccess_truth_imprec
 
 Success was more likely for true news when their content Polarization was at its minimum and it was more likely for false news when their content Polarization was at its maximum:
 
-```{r MLM of success: Polarization effect: emmeans pairs, echo=FALSE}
+```{r MLM of success: imprecision effect: emmeans pairs, echo=FALSE}
 
 estSuccess_truth_imprec_pairs
+estSuccess_truth_imprec_ci
 # estSuccess_truth_imprec_size
 
 ```
 
 The probability of success for true and false news, given a Polarization at the lowest or highest level, is: 
 
-```{r MLM of success: Polarization effect: emmeans prob, echo=FALSE}
+```{r MLM of success: polarization effect: emmeans prob, echo=FALSE}
 
 estSuccess_truth_polar
 
@@ -374,9 +380,10 @@ estSuccess_truth_polar
 
 Success was more likely for true news when their content imprecision was at its minimum and it was more likely for false news when their content imprecision was at its maximum:
 
-```{r MLM of success: imprecision effect: emmeans pairs, echo=FALSE}
+```{r MLM of success: polarization effect: emmeans pairs, echo=FALSE}
 
 estSuccess_truth_polar_pairs
+estSuccess_truth_polar_ci
 # estSuccess_truth_polar_size
 
 ```
@@ -413,9 +420,9 @@ ggsave("Rplot_rand2_interactionPlot_mSuccessImprec.png", path = figure_path, wid
 # Plot emmeans
 boxLabels <- c("True", "False")
 df = data.frame(yAxis = length(boxLabels):1, 
-                boxOdds = estSuccess_truth_imprec_confint$odds.ratio, 
-                boxCILow = estSuccess_truth_imprec_confint$asymp.LCL, 
-                boxCIHigh = estSuccess_truth_imprec_confint$asymp.UCL, 
+                boxOdds = estSuccess_truth_imprec_ci$odds.ratio, 
+                boxCILow = estSuccess_truth_imprec_ci$asymp.LCL, 
+                boxCIHigh = estSuccess_truth_imprec_ci$asymp.UCL, 
                 boxLabels = boxLabels)
 
 # Make a variable for whether your test is significant
@@ -452,7 +459,7 @@ ggsave("Rplot_rand2_Odds-ratio_mSuccessImprec.png", path = figure_path, width = 
 
 <br> Plots for Polarization:
 
-```{r success by Polarization plots, echo=FALSE, results="hide"}
+```{r success by polarization plots, echo=FALSE, results="hide"}
 
 # plot interaction via ggplot
 Plot_successPolar <- interact_plot(mSuccess_truth_ambig_ctrld2, pred = Polarization, modx = Veracity, plot.points = FALSE,interval = TRUE, outcome.scale="response", colors = c("#F8766D", "#00BFC4"))
@@ -481,9 +488,9 @@ ggsave("Rplot_rand2_interactionPlot_mSuccessPolar.png", path = figure_path, widt
 # Plot emmeans
 boxLabels <- c("True", "False")
 df = data.frame(yAxis = length(boxLabels):1, 
-                boxOdds = estSuccess_truth_polar_confint$odds.ratio, 
-                boxCILow = estSuccess_truth_polar_confint$asymp.LCL, 
-                boxCIHigh = estSuccess_truth_polar_confint$asymp.UCL, 
+                boxOdds = estSuccess_truth_polar_ci$odds.ratio, 
+                boxCILow = estSuccess_truth_polar_ci$asymp.LCL, 
+                boxCIHigh = estSuccess_truth_polar_ci$asymp.UCL, 
                 boxLabels = boxLabels)
 
 # Make a variable for whether your test is significant
@@ -592,8 +599,29 @@ As content imprecision increased, the likelihood to judge news as true significa
 
 ```{r MLM of judgment: imprecision effect: emmeans pairs, echo=FALSE}
 
+estJudgment_imprec_pairs
+estJudgment_imprec_pairs
 estJudgment_truth_imprec_pairs
-# estJudgment_truth_imprec_size
+estJudgment_truth_imprec_ci
+
+```
+
+The probability of veracity judgment for true and false news, given an imprecision at the lowest or highest level, is: 
+
+```{r MLM of judgment: polarization effect: emmeans prob, echo=FALSE}
+
+estJudgment_truth_polar
+
+```
+
+As content imprecision increased, the likelihood to judge news as true significantly decreased:
+
+```{r MLM of judgment: polarization effect: emmeans pairs, echo=FALSE}
+
+estJudgment_polar_pairs
+estJudgment_polar_pairs_ci
+estJudgment_truth_polar_pairs
+estJudgment_truth_polar_ci
 
 ```
 
@@ -625,9 +653,9 @@ ggsave("Rplot_rand2_interactionPlot_mJudgmentImprec.png", path = figure_path, wi
 # Plot emmeans
 boxLabels <- c("True", "False")
 df = data.frame(yAxis = length(boxLabels):1, 
-                boxOdds = estJudgment_truth_imprec_confint$odds.ratio, 
-                boxCILow = estJudgment_truth_imprec_confint$asymp.LCL, 
-                boxCIHigh = estJudgment_truth_imprec_confint$asymp.UCL, 
+                boxOdds = estJudgment_truth_imprec_ci$odds.ratio, 
+                boxCILow = estJudgment_truth_imprec_ci$asymp.LCL, 
+                boxCIHigh = estJudgment_truth_imprec_ci$asymp.UCL, 
                 boxLabels = boxLabels)
 
 # Make a variable for whether your test is significant
@@ -689,9 +717,9 @@ ggsave("Rplot_rand2_interactionPlot_mJudgmentPolar.png", path = figure_path, wid
 # Plot emmeans
 boxLabels <- c("True", "False")
 df = data.frame(yAxis = length(boxLabels):1, 
-                boxOdds = estJudgment_truth_polar_confint$odds.ratio, 
-                boxCILow = estJudgment_truth_polar_confint$asymp.LCL, 
-                boxCIHigh = estJudgment_truth_polar_confint$asymp.UCL, 
+                boxOdds = estJudgment_truth_polar_ci$odds.ratio, 
+                boxCILow = estJudgment_truth_polar_ci$asymp.LCL, 
+                boxCIHigh = estJudgment_truth_polar_ci$asymp.UCL, 
                 boxLabels = boxLabels)
 
 # Make a variable for whether your test is significant
@@ -865,6 +893,7 @@ Finally, confidence was not significantly different between the two types of jud
 
 # estConfidence_judgment_imprec
 estConfidence_judgment_imprec_pairs
+estConfidence_judgment_imprec_pairs_ci
 # estConfidence_judgment_imprec_size
 
 ```
@@ -878,6 +907,7 @@ Finally, confidence was not significantly different between the two types of jud
 
 # estConfidence_judgment_polar
 estConfidence_judgment_polar_pairs
+estConfidence_judgment_polar_pairs_ci
 # estConfidence_judgment_polar_size
 
 ```
@@ -1005,6 +1035,7 @@ The probability of demanding more information decreases as confidence in one’s
 ```{r MLM of reception: metacognition effect: emmeans pairs, echo=FALSE}
 
 estRec_judgment_confidence_pairs
+estRec_judgment_confidence_ci
 # estRec_judgment_confidence_size
 
 ```
@@ -1014,9 +1045,8 @@ Plots:
 ```{r reception by unscaled confidence plots, echo=FALSE, results="hide"}
 
 # plot interaction via ggplot
-PlotRec_Confidence <- interact_plot(mRec_confidence_plot, pred = Confidence, modx = Judgment, plot.points = FALSE,interval = TRUE,outcome.scale="response", colors = c("#D95319", "#0072BD"))
+PlotRec_Confidence <- interact_plot(mRec_confidence_plot, pred = Confidence, modx = Judgment, plot.points = FALSE,interval = TRUE,outcome.scale="response")
 # outcome.scale="link" -> to plot on a linear scale; outcome.scale="response" -> to plot on data original scale
-color1 = brewer.pal(9, 'Reds'); color2 = brewer.pal(9, 'Blues')
 
 PlotRec_Confidence <- PlotRec_Confidence + 
   theme_pubr() +
@@ -1024,7 +1054,8 @@ PlotRec_Confidence <- PlotRec_Confidence +
   theme(legend.title = element_text(size = 18)) + 
   theme(legend.text = element_text(size = 18),axis.title.y = element_text(size=18),
         axis.title.x = element_text(size=18)) + ylab("Probability to receive") + 
-  geom_jitter() 
+  geom_jitter() +
+  scale_color_viridis_d(option = "H", begin = 0.2, end = 0.8, direction = -1)
 
 PlotRec_Confidence
 
@@ -1038,9 +1069,9 @@ ggsave("Rplot_rand2_interactionPlot_mRec_Confidence.png", path = figure_path, wi
 # Plot emmeans
 boxLabels <- c("False", "True")
 df = data.frame(yAxis = length(boxLabels):1, 
-                boxOdds = estRec_judgment_confidence_confint$odds.ratio, 
-                boxCILow = estRec_judgment_confidence_confint$asymp.LCL, 
-                boxCIHigh = estRec_judgment_confidence_confint$asymp.UCL, 
+                boxOdds = estRec_judgment_confidence_ci$odds.ratio, 
+                boxCILow = estRec_judgment_confidence_ci$asymp.LCL, 
+                boxCIHigh = estRec_judgment_confidence_ci$asymp.UCL, 
                 boxLabels = boxLabels)
 
 # Make a variable for whether your test is significant
@@ -1135,6 +1166,7 @@ Participants are willing to pay more not to receive more information about what 
 ```{r MLM of WTP: metacognition effect: emmeans pairs, echo=FALSE}
 
 estWTP_rec_confidence_pairs
+estWTP_rec_confidence_ci
 # estWTP_rec_confidence_size # gives the LCL and UCL for the Effect size plot below
 
 ```
@@ -1144,7 +1176,7 @@ Plots:
 ```{r WTP by unscaled confidence plots, echo=FALSE, results="hide"}
 
 # plot interaction via ggplot
-PlotWTP_Confidence <- interact_plot(mWTP_confidence_plot, pred = Confidence, modx = Reception, plot.points = FALSE,interval = TRUE, legend.main = "Choice", modx.labels = c("No reception", "Reception"),outcome.scale="response", colors = c("#FF8C00", "#00BFFF"))
+PlotWTP_Confidence <- interact_plot(mWTP_confidence_plot, pred = Confidence, modx = Reception, plot.points = FALSE,interval = TRUE, legend.main = "Choice", modx.labels = c("No reception", "Reception"),outcome.scale="response")
 # outcome.scale="link" -> to plot on a linear scale; outcome.scale="response" -> to plot on data original scale
 
 PlotWTP_Confidence <- PlotWTP_Confidence + 

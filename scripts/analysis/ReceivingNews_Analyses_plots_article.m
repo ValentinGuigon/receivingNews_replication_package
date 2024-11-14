@@ -55,6 +55,15 @@ set(groot, 'DefaultAxesTickDirMode', 'manual');
 
 idnews = plots_data{1:48,3}; idnews(49:96) = plots_data{97:144,3};
 
+color_false = [0.9725, 0.4627, 0.4275];
+color_true = [0, 0.7490, 0.7686];
+color_judgment_true = [0, 0.4470, 0.7410];
+color_judgment_false = [0.6350 0.0780 0.1840];
+color_reception = [0.0196, 0.7098, 0.9176];
+color_no_reception = [0.9882, 0.5137, 0];
+
+
+
 
 %% SUCCESS RATES
 
@@ -80,10 +89,10 @@ for ii = [1 3 5]
     ax(m)=nexttile(t);
     
     x1=fitdist(Rec_allSub.allSubMeanTrial(3).output(:,ii)*100,'Normal'); x1_pdf = [0:0.1:1]; y1 = pdf(x1,x1_pdf);
-    h1=histogram(Rec_allSub.allSubMeanTrial(3).output(:,ii)*100,8,'Normalization', 'pdf','facealpha', .5, 'FaceColor', [0.8500 0.3250 0.0980]);
+    h1=histogram(Rec_allSub.allSubMeanTrial(3).output(:,ii)*100,8,'Normalization', 'pdf','facealpha', 1, 'FaceColor', color_false);
     hold on
     x2=fitdist(Rec_allSub.allSubMeanTrial(3).output(:,ii+1)*100,'Normal'); x2_pdf = [0:0.1:1]; y2 =pdf(x2,x2_pdf);
-    h2=histogram(Rec_allSub.allSubMeanTrial(3).output(:,ii+1)*100,8,'Normalization', 'pdf','facealpha', .5, 'FaceColor', [0 0.4470 0.7410]);
+    h2=histogram(Rec_allSub.allSubMeanTrial(3).output(:,ii+1)*100,8,'Normalization', 'pdf','facealpha', .5, 'FaceColor', color_true);
     hold off
     
     subtitle(subtitles(ii), 'FontSize', taille); 
@@ -110,10 +119,10 @@ for ii = [1 3 5]
     [p h] = ranksum(Rec_allSub.allSubMeanTrial(8).output(:,ii)*100, Rec_allSub.allSubMeanTrial(8).output(:,ii+1)*100);
     ax(m)=nexttile(t);
     x1=fitdist(Rec_allSub.allSubMeanTrial(8).output(:,ii)*100,'Normal'); x1_pdf = [0:0.1:1]; y1 = pdf(x1,x1_pdf);
-    h1=histogram(Rec_allSub.allSubMeanTrial(8).output(:,ii)*100,8,'Normalization', 'pdf','facealpha', .5, 'FaceColor', [0.8500 0.3250 0.0980]);
+    h1=histogram(Rec_allSub.allSubMeanTrial(8).output(:,ii)*100,8,'Normalization', 'pdf','facealpha', 1, 'FaceColor', color_false);
     hold on
     x2=fitdist(Rec_allSub.allSubMeanTrial(8).output(:,ii+1)*100,'Normal'); x2_pdf = [0:0.1:1]; y2 =pdf(x2,x2_pdf);
-    h2=histogram(Rec_allSub.allSubMeanTrial(8).output(:,ii+1)*100,8,'Normalization', 'pdf','facealpha', .5, 'FaceColor', [0 0.4470 0.7410]);
+    h2=histogram(Rec_allSub.allSubMeanTrial(8).output(:,ii+1)*100,8,'Normalization', 'pdf','facealpha', .5, 'FaceColor', color_true);
     hold off
 
     subtitle(subtitles(ii), 'FontSize', taille);    
@@ -131,7 +140,8 @@ for ii = [1 3 5]
     end
     m=m+1;
 end
-lg = legend(ax(2),'False information','True information', 'Orientation', 'horizontal', 'location','northoutside');
+lg = legend(ax(2),'False','True', 'Orientation', 'horizontal', 'location','northoutside');
+lg.Title.String = 'Veracity';
 set(lg,'Box','off')
 
 
@@ -165,11 +175,11 @@ p2 = polyfit(x2_level,x2_sum,1); f2 = polyval(p2,x2_level);
 hold on;
 
 line([0 10],[0.5 0.5], 'Color',[0.7 0.7 0.7],'LineStyle','--');
-line(x1_level,f1,'Color',[0, 0.4470, 0.7410]', 'LineWidth', 1.5);
-p1 = plot(x1_level, x1_sum, 'LineWidth',1.5,'MarkerSize',10,'LineStyle','none', 'Marker', 'diamond', 'Color', [0, 0.4470, 0.7410]); 
-line(x2_level,f2,'Color',[0.8500 0.3250 0.0980]', 'LineWidth', 1.5);
-p2 = plot(x2_level, x2_sum, 'LineWidth',1.5,'MarkerSize',10,'LineStyle','none', 'Marker', 'diamond', 'Color', [0.8500 0.3250 0.0980]); 
-lg = legend([p1 p2], 'True information', 'False information', 'Orientation', 'horizontal');
+line(x1_level,f1,'Color',color_true, 'LineWidth', 1.5);
+p1 = plot(x1_level, x1_sum, 'LineWidth',1.5,'MarkerSize',10,'LineStyle','none', 'Marker', 'diamond', 'Color', color_true); 
+line(x2_level,f2,'Color',color_false', 'LineWidth', 1.5);
+p2 = plot(x2_level, x2_sum, 'LineWidth',1.5,'MarkerSize',10,'LineStyle','none', 'Marker', 'diamond', 'Color', color_false); 
+lg = legend([p1 p2], 'True news', 'False news', 'Orientation', 'horizontal');
 lg.Layout.Tile = 'North';
 set(lg,'Box','off')
 set(gca,'linewidth',1)
@@ -212,11 +222,11 @@ p2 = polyfit(x2_level,x2_sum,1); f2 = polyval(p2,x2_level);
 hold on;
 
 line([0 10],[0.5 0.5], 'Color',[0.7 0.7 0.7],'LineStyle','--');
-line(x1_level,f1,'Color',[0, 0.4470, 0.7410]', 'LineWidth', 1.5);
-p1 = plot(x1_level, x1_sum, 'LineWidth',1.5,'MarkerSize',10,'LineStyle','none', 'Marker', 'diamond', 'Color', [0, 0.4470, 0.7410]); 
-line(x2_level,f2,'Color',[0.8500 0.3250 0.0980]', 'LineWidth', 1.5);
-p2 = plot(x2_level, x2_sum, 'LineWidth',1.5,'MarkerSize',10,'LineStyle','none', 'Marker', 'diamond', 'Color', [0.8500 0.3250 0.0980]); 
-lg = legend([p1 p2], 'True information', 'False information', 'Orientation', 'horizontal');
+line(x1_level,f1,'Color',color_true, 'LineWidth', 1.5);
+p1 = plot(x1_level, x1_sum, 'LineWidth',1.5,'MarkerSize',10,'LineStyle','none', 'Marker', 'diamond', 'Color', color_true); 
+line(x2_level,f2,'Color',color_false, 'LineWidth', 1.5);
+p2 = plot(x2_level, x2_sum, 'LineWidth',1.5,'MarkerSize',10,'LineStyle','none', 'Marker', 'diamond', 'Color', color_false); 
+lg = legend([p1 p2], 'True news', 'False news', 'Orientation', 'horizontal');
 lg.Layout.Tile = 'North';
 set(lg,'Box','off')
 set(gca,'linewidth',1)
@@ -320,61 +330,58 @@ end
 
 
 %% CONFIDENCE-ACCURACY CALIBRATION TABLE FOR BOTH NEWS JUDGMENTS
+    
+% Figure setup
+h = figure;
+outer_position_factor = 1; % Define the factor if not already defined
+h.Position = [100, 100, 900 * outer_position_factor, 350 * 1.5 * outer_position_factor];
+t = tiledlayout(1, 1, 'TileSpacing', 'compact', 'Padding', 'none'); % Removed padding to fit within window
 
-% Figure: display full-size then save
-colors = cbrewer('qual', 'Paired', 12); m=0; 
-h = figure; 
-h.Position = [100 100 900*outer_position_factor 350*1.5*outer_position_factor];
-t = tiledlayout(1,1);
-x = [0 100]; y = [0 1]; x1 = [5:10:100]; x1bis = [5 95]; y1bis = [0.05 1];
-yu = y1bis+0.05; yd = y1bis-0.05;
+% Data
+x = [0 100]; y = [0 1]; x1 = 5:10:100; x1bis = [5 95]; y1bis = [0.05 1];
+yu = y1bis + 0.05; yd = y1bis - 0.05;
 yy = [0.5 0.5]; yyy = [0.45 0.45]; yyyy = [0.55 0.55];
-xticks1 = {'', '', '', '', '', '', '', '', '', ''};
 xticks2 = {'1-10', '11-20', '21-30', '31-40', '41-50', '51-60', '61-70', '71-80', '81-90', '91-100'};
 
+% Plotting
 nexttile
 hold on
-% title(strcat('News judged as false'),'FontSize',25);
-line(x1bis,y1bis,'Color','black','LineStyle','--'); ln = fill([x1bis fliplr(x1bis)], [yu fliplr(yd)], [0.95 0.95 0.95], 'linestyle', 'none');
-l1 = line(x1bis,y1bis, 'Color','black', 'LineWidth',1.5);
-line([0 100], [0 0], 'Color','black', 'LineWidth',1.5);
-l2 = line(x,yy, 'Color',[.7 .7 .7],'LineStyle',':', 'LineWidth',1.5);
-line(x,yyy, 'Color',[.7 .7 .7],'LineStyle','--', 'LineWidth',1.5);
-line(x,yyyy, 'Color',[.7 .7 .7],'LineStyle','--', 'LineWidth',1.5);
+fill([x1bis fliplr(x1bis)], [yu fliplr(yd)], [0.95 0.95 0.95], 'linestyle', 'none');
+l1 = line(x1bis, y1bis, 'Color', 'black', 'LineWidth', 1.5);
+line([0 100], [0 0], 'Color', 'black', 'LineWidth', 1.5);
+l2 = line(x, yy, 'Color', [0.7 0.7 0.7], 'LineStyle', ':', 'LineWidth', 1.5);
+line(x, yyy, 'Color', [0.7 0.7 0.7], 'LineStyle', '--', 'LineWidth', 1.5);
+line(x, yyyy, 'Color', [0.7 0.7 0.7], 'LineStyle', '--', 'LineWidth', 1.5);
 
-a1_y = mean(tableJT,'omitnan');
-a2_y = mean(tableJF,'omitnan');
-% p1= plot(x1, mean(tableT,'omitnan'), 'LineWidth',3,'MarkerSize',30, 'LineStyle', '-', 'Marker', '.', 'Color', colors(2,:)); 
-% p2= plot(x1, mean(tableF,'omitnan'),'LineWidth',3,'MarkerSize',30, 'LineStyle', '-', 'Marker', '.', 'Color', colors(9,:)); 
+% Plot data with patches and error bars
+a1_y = mean(tableJT, 'omitnan');
+a2_y = mean(tableJF, 'omitnan');
+patch([x1 fliplr(x1)], [a1_y(1,1:10) - std(tableJT,'omitnan') ./ sqrt(length(~isnan(tableJT))) ...
+        fliplr(a1_y(1,1:10) + std(tableJT,'omitnan') ./ sqrt(length(~isnan(tableJT))))], color_judgment_true, 'FaceAlpha', 0.3);
+p1 = plot(x1, a1_y(1,1:10), 'Color', color_judgment_true, 'LineWidth', 2);
 
-patch([x1 fliplr(x1)], [a1_y(1,1:10)-std(tableJT,'omitnan')./sqrt(length(~isnan(tableJT))) fliplr(a1_y(1,1:10)+std(tableJT,'omitnan')./sqrt(length(~isnan(tableJT))))],colors(4,:), 'FaceAlpha', 0.3)
-p1 = plot(x1, a1_y(1,1:10),'Color', colors(4,:),'LineWidth',2);
+patch([x1 fliplr(x1)], [a2_y(1,1:10) - std(tableJF,'omitnan') ./ sqrt(length(~isnan(tableJF))) ...
+        fliplr(a2_y(1,1:10) + std(tableJF,'omitnan') ./ sqrt(length(~isnan(tableJF))))], color_judgment_false, 'FaceAlpha', 0.3);
+p2 = plot(x1, a2_y(1,1:10), 'Color', color_judgment_false, 'LineWidth', 2);
 
-patch([x1 fliplr(x1)], [a2_y(1,1:10)-std(tableJF,'omitnan')./sqrt(length(~isnan(tableJF))) fliplr(a2_y(1,1:10)+std(tableJF,'omitnan')./sqrt(length(~isnan(tableJF))))],colors(6,:), 'FaceAlpha', 0.3)
-p2 = plot(x1, a2_y(1,1:10),'Color', colors(6,:),'LineWidth',2);
+errorbar(x1, mean(tableJT,'omitnan'), std(tableJT,'omitnan') / sqrt(length(~isnan(tableJT))), 'Color', color_judgment_true);
+errorbar(x1, mean(tableJF,'omitnan'), std(tableJF,'omitnan') / sqrt(length(~isnan(tableJF))), 'Color', color_judgment_false);
 
-standard_error1 = std(tableJT,'omitnan') / sqrt(length(~isnan(tableJT)));
-e1 = errorbar(x1, mean(tableJT,'omitnan'), standard_error1, 'Color', colors(4,:));
-standard_error2 = std(tableJF,'omitnan') / sqrt(length(~isnan(tableJF)));
-e2 = errorbar(x1, mean(tableJF,'omitnan'), standard_error2, 'Color', colors(6,:));
-% 
-% e1.CapSize = 30; e2.CapSize = 30;
-% e1.LineWidth = 2; e2.LineWidth = 2;
-a = get(gca,'XTickLabel');
-set(gca,'XTickLabel',a,'fontsize',taille)
-
-xticks([5:10:100]);
+% Axis settings
+xticks(5:10:100);
 xticklabels(xticks2);
-xlabel('Confidence','FontSize',taille);
-axis([0 100 0 1])
+xlabel('Confidence', 'FontSize', taille, 'FontWeight', 'bold', 'FontName', 'Arial');
+ylabel('Proportion correct (mean + SE)', 'FontSize', taille, 'FontWeight', 'bold', 'FontName', 'Arial');
+title(t, 'Confidence-accuracy calibration', 'FontSize', taille);
 
-ylabel(t, 'Proportion correct (mean + SE)','FontSize',taille);
-title(t, strcat('Confidence-accuracy calibration'),'FontSize',taille);
-lg = legend([p1 p2 l1 l2],'News judged as true','News judged as false','Well-calibrated interval','Non-calibrated interval'...
-    ,'Location', 'southoutside', 'Orientation', 'horizontal', 'FontSize',taille);
-lg.NumColumns=2;
-lg.Layout.Tile = 'North';
-set(lg,'Box','off')
+% Legends
+leg1 = legend([p2, p1], 'False', 'True', 'Location', 'NorthWest', 'Orientation', 'horizontal', 'FontSize', taille);
+leg1.Title.String = 'Judgment';
+set(leg1, 'EdgeColor', 'none');
+ah1 = axes('Position', get(gca, 'Position'), 'Visible', 'off');
+leg2 = legend(ah1, [l1, l2], 'Well-calibrated', 'Non-calibrated', 'Location', 'NorthEast', 'Orientation', 'horizontal', 'FontSize', taille);
+leg2.Title.String = 'Calibration';
+set(leg2, 'EdgeColor', 'none');
 
 saveas(gcf, strcat(project_root,'/outputs/figures/Matlab/Metacognition_calibration.png'))
 saveas(gcf, strcat(project_root,'/outputs/figures/Matlab/Metacognition_calibration.tif'))
@@ -385,60 +392,56 @@ saveas(gcf, strcat(project_root,'/outputs/figures/Matlab/Metacognition_calibrati
 
 %% CONFIDENCE-ACCURACY CALIBRATION TABLE FOR BOTH NEWS TRUTHFULNESS
 
-% Figure: display full-size then save
-colors = cbrewer('qual', 'Paired', 12); m=0; 
-h = figure; 
-h.Position = [100 100 900*outer_position_factor 350*1.5*outer_position_factor];
-t = tiledlayout(1,1);
-x = [0 100]; y = [0 1]; x1 = [5:10:100]; x1bis = [5 95]; y1bis = [0.05 1];
-yu = y1bis+0.05; yd = y1bis-0.05;
+% Figure setup
+h = figure;
+outer_position_factor = 1; % Define if not already set
+h.Position = [100, 100, 900 * outer_position_factor, 350 * 1.5 * outer_position_factor];
+t = tiledlayout(1, 1, 'TileSpacing', 'compact', 'Padding', 'none');
+
+% Data
+x = [0 100]; y = [0 1]; x1 = 5:10:100; x1bis = [5 95]; y1bis = [0.05 1];
+yu = y1bis + 0.05; yd = y1bis - 0.05;
 yy = [0.5 0.5]; yyy = [0.45 0.45]; yyyy = [0.55 0.55];
-xticks1 = {'', '', '', '', '', '', '', '', '', ''};
 xticks2 = {'1-10', '11-20', '21-30', '31-40', '41-50', '51-60', '61-70', '71-80', '81-90', '91-100'};
 
+% Plotting
 nexttile
 hold on
-% title(strcat('News judged as false'),'FontSize',25);
-line(x1bis,y1bis,'Color','black','LineStyle','--'); ln = fill([x1bis fliplr(x1bis)], [yu fliplr(yd)], [0.95 0.95 0.95], 'linestyle', 'none');
-l1 = line(x1bis,y1bis, 'Color','black', 'LineWidth',1.5);
-line([0 100], [0 0], 'Color','black', 'LineWidth',1.5);
-l2 = line(x,yy, 'Color',[.7 .7 .7],'LineStyle',':', 'LineWidth',1.5);
-line(x,yyy, 'Color',[.7 .7 .7],'LineStyle','--', 'LineWidth',1.5);
-line(x,yyyy, 'Color',[.7 .7 .7],'LineStyle','--', 'LineWidth',1.5);
+fill([x1bis fliplr(x1bis)], [yu fliplr(yd)], [0.95 0.95 0.95], 'linestyle', 'none');
+l1 = line(x1bis, y1bis, 'Color', 'black', 'LineWidth', 1.5); % Well-calibrated interval
+line([0 100], [0 0], 'Color', 'black', 'LineWidth', 1.5);
+l2 = line(x, yy, 'Color', [0.7 0.7 0.7], 'LineStyle', ':', 'LineWidth', 1.5); % Non-calibrated interval
+line(x, yyy, 'Color', [0.7 0.7 0.7], 'LineStyle', '--', 'LineWidth', 1.5);
+line(x, yyyy, 'Color', [0.7 0.7 0.7], 'LineStyle', '--', 'LineWidth', 1.5);
 
-a1_y = mean(tableT,'omitnan');
-a2_y = mean(tableF,'omitnan');
-% p1= plot(x1, mean(tableT,'omitnan'), 'LineWidth',3,'MarkerSize',30, 'LineStyle', '-', 'Marker', '.', 'Color', colors(2,:)); 
-% p2= plot(x1, mean(tableF,'omitnan'),'LineWidth',3,'MarkerSize',30, 'LineStyle', '-', 'Marker', '.', 'Color', colors(9,:)); 
+% Plot data with patches and error bars
+a1_y = mean(tableT, 'omitnan');
+a2_y = mean(tableF, 'omitnan');
+patch([x1 fliplr(x1)], [a1_y(1, 1:10) - std(tableT, 'omitnan') ./ sqrt(length(~isnan(tableT))), ...
+      fliplr(a1_y(1, 1:10) + std(tableT, 'omitnan') ./ sqrt(length(~isnan(tableT))))], color_true, 'FaceAlpha', 0.3);
+p1 = plot(x1, a1_y(1, 1:10), 'Color', color_true, 'LineWidth', 2); % True
+patch([x1 fliplr(x1)], [a2_y(1, 1:10) - std(tableF, 'omitnan') ./ sqrt(length(~isnan(tableF))), ...
+      fliplr(a2_y(1, 1:10) + std(tableF, 'omitnan') ./ sqrt(length(~isnan(tableF))))], color_false, 'FaceAlpha', 0.3);
+p2 = plot(x1, a2_y(1, 1:10), 'Color', color_false, 'LineWidth', 2); % False
 
-patch([x1 fliplr(x1)], [a1_y(1,1:10)-std(tableT,'omitnan')./sqrt(length(~isnan(tableT))) fliplr(a1_y(1,1:10)+std(tableT,'omitnan')./sqrt(length(~isnan(tableT))))],colors(4,:), 'FaceAlpha', 0.3)
-p1 = plot(x1, a1_y(1,1:10),'Color', colors(4,:),'LineWidth',2);
+errorbar(x1, mean(tableT, 'omitnan'), std(tableT, 'omitnan') / sqrt(length(~isnan(tableT))), 'Color', color_true);
+errorbar(x1, mean(tableF, 'omitnan'), std(tableF, 'omitnan') / sqrt(length(~isnan(tableF))), 'Color', color_false);
 
-patch([x1 fliplr(x1)], [a2_y(1,1:10)-std(tableF,'omitnan')./sqrt(length(~isnan(tableF))) fliplr(a2_y(1,1:10)+std(tableF,'omitnan')./sqrt(length(~isnan(tableF))))],colors(6,:), 'FaceAlpha', 0.3)
-p2 = plot(x1, a2_y(1,1:10),'Color', colors(6,:),'LineWidth',2);
-
-standard_error1 = std(tableT,'omitnan') / sqrt(length(~isnan(tableT)));
-e1 = errorbar(x1, mean(tableT,'omitnan'), standard_error1, 'Color', colors(4,:));
-standard_error2 = std(tableF,'omitnan') / sqrt(length(~isnan(tableF)));
-e2 = errorbar(x1, mean(tableF,'omitnan'), standard_error2, 'Color', colors(6,:));
-% 
-% e1.CapSize = 30; e2.CapSize = 30;
-% e1.LineWidth = 2; e2.LineWidth = 2;
-a = get(gca,'XTickLabel');
-set(gca,'XTickLabel',a,'fontsize',taille)
-
-xticks([5:10:100]);
+% Axis settings
+xticks(5:10:100);
 xticklabels(xticks2);
-xlabel('Confidence','FontSize',taille);
-axis([0 100 0 1])
+xlabel('Confidence', 'FontSize', taille, 'FontWeight', 'bold', 'FontName', 'Arial');
+ylabel('Proportion correct (mean + SE)', 'FontSize', taille, 'FontWeight', 'bold', 'FontName', 'Arial');
+title(t, 'Confidence-accuracy calibration', 'FontSize', taille);
 
-ylabel(t, 'Proportion correct (mean + SE)','FontSize',taille);
-title(t, strcat('Confidence-accuracy calibration'),'FontSize',taille);
-lg = legend([p1 p2 l1 l2],'True news','False news','Well-calibrated interval','Non-calibrated interval'...
-    ,'Location', 'southoutside', 'Orientation', 'horizontal', 'FontSize',taille);
-lg.NumColumns=2;
-lg.Layout.Tile = 'North';
-set(lg,'Box','off')
+% Legends
+leg1 = legend([p2, p1], 'False', 'True', 'Location', 'NorthWest', 'Orientation', 'horizontal', 'FontSize', taille);
+leg1.Title.String = 'Veracity';
+set(leg1, 'EdgeColor', 'none');
+ah1 = axes('Position', get(gca, 'Position'), 'Visible', 'off');
+leg2 = legend(ah1, [l1, l2], 'Well-calibrated', 'Non-calibrated', 'Location', 'NorthEast', 'Orientation', 'horizontal', 'FontSize', taille);
+leg2.Title.String = 'Calibration';
+set(leg2, 'EdgeColor', 'none');
 
 saveas(gcf, strcat(project_root,'/outputs/figures/Matlab/Metacognition_calibration_perTruthfulness.png'))
 saveas(gcf, strcat(project_root,'/outputs/figures/Matlab/Metacognition_calibration_perTruthfulness.tif'))
@@ -479,20 +482,6 @@ supertemp= [temp; temp2]; %bar(supertemp(:,1),supertemp(:,2));
 
 
 
-% % plot linear interaction
-% temp = zeros(10,5); temp2 = zeros(10,5);
-% for jj = 1:nbs
-%     m=0;
-%     for ii = 1:10
-%     tmp = table2array(plots_data(plots_data.eval >= 1+m & plots_data.eval < ii*10 & plots_data.subject == jj, 10)); % disp([1+m, ii*10])
-%     temp(jj,ii) = sum(tmp==1)/length(tmp);
-%     
-%     tmp2 = table2array(plots_data(plots_data.eval <= -1-m & plots_data.eval > -ii*10 & plots_data.subject == jj, 10));
-%     temp2(jj,ii) = sum(tmp2==1)/length(tmp2);
-%     m=m+10;
-%     end
-% end
-
 x1=supertemp(1:10,1); y1=supertemp(1:10,2);
 x2=supertemp(1:10,1); y2=supertemp(11:20,2);
 
@@ -501,15 +490,15 @@ p1 = polyfit(x1,y1,1); f1 = polyval(p1,x1);
 p2 = polyfit(x2,y2,1); f2 = polyval(p2,x2);
 hold on;
 
-line(x1,f1,'Color',[0, 0.4470, 0.7410]', 'LineWidth', 1.5);
-p1 = plot(x1, y1, 'LineWidth',1.5,'MarkerSize',10,'LineStyle','none', 'Marker', 'diamond', 'Color', [0, 0.4470, 0.7410]); 
-line(x2,f2,'Color',[0.6350 0.0780 0.1840], 'LineWidth', 1.5);
-p2 = plot(x2, y2, 'LineWidth',1.5,'MarkerSize',10,'LineStyle','none', 'Marker', 'diamond', 'Color', [0.6350 0.0780 0.1840]); 
+line(x1,f1,'Color',color_judgment_true, 'LineWidth', 1.5);
+p1 = plot(x1, y1, 'LineWidth',1.5,'MarkerSize',10,'LineStyle','none', 'Marker', 'diamond', 'Color', color_judgment_true); 
+line(x2,f2,'Color',color_judgment_false, 'LineWidth', 1.5);
+p2 = plot(x2, y2, 'LineWidth',1.5,'MarkerSize',10,'LineStyle','none', 'Marker', 'diamond', 'Color', color_judgment_false); 
 
 line([10 100],[0.5 0.5], 'Color',[0.7 0.7 0.7],'LineStyle','--');
 for ii = 1:10
-    line([x1(ii) x1(ii)], [supertemp(ii,4) supertemp(ii,5)], 'Color', [0, 0.4470, 0.7410], 'LineWidth', 1);
-    line([x2(ii) x2(ii)], [supertemp(ii+10,4) supertemp(ii+10,5)], 'Color', [0.6350 0.0780 0.1840], 'LineWidth', 1);
+    line([x1(ii) x1(ii)], [supertemp(ii,4) supertemp(ii,5)], 'Color', color_judgment_true, 'LineWidth', 1);
+    line([x2(ii) x2(ii)], [supertemp(ii+10,4) supertemp(ii+10,5)], 'Color', color_judgment_false, 'LineWidth', 1);
 end
 
 ylim([0.25 0.75])
@@ -551,10 +540,10 @@ p2 = polyfit(x2_level,x2_sum,1); f2 = polyval(p2,x2_level);
 hold on;
 
 line([0 100],[0.5 0.5], 'Color',[0.7 0.7 0.7],'LineStyle','--');
-line(x1_level,f1,'Color',[0, 0.4470, 0.7410]', 'LineWidth', 1.5);
-p1 = plot(x1_level, x1_sum, 'LineWidth',1.5,'MarkerSize',10,'LineStyle','none', 'Marker', '.', 'Color', [0, 0.4470, 0.7410]); 
-line(x2_level,f2,'Color',[0.8500 0.3250 0.0980]', 'LineWidth', 1.5);
-p2 = plot(x2_level, x2_sum, 'LineWidth',1.5,'MarkerSize',10,'LineStyle','none', 'Marker', '.', 'Color', [0.8500 0.3250 0.0980]); 
+line(x1_level,f1,'Color',color_judgment_true, 'LineWidth', 1.5);
+p1 = plot(x1_level, x1_sum, 'LineWidth',1.5,'MarkerSize',10,'LineStyle','none', 'Marker', '.', 'Color', color_judgment_true); 
+line(x2_level,f2,'Color',color_judgment_false, 'LineWidth', 1.5);
+p2 = plot(x2_level, x2_sum, 'LineWidth',1.5,'MarkerSize',10,'LineStyle','none', 'Marker', '.', 'Color', color_judgment_false); 
 lg = legend([p1 p2], 'Judged as True', 'Judged as False', 'Orientation', 'horizontal');
 lg.Layout.Tile = 'North';
 set(lg,'Box','off')
@@ -588,9 +577,9 @@ temp1 = plots_data(plots_data{:,10}==1,:); temp2 = plots_data(plots_data{:,10}==
 h = figure;
 t = tiledlayout(1,1);
 nexttile
-x2=fitdist(temp2.WTP,'Normal'); x2_pdf = [1:1:25]; y2 = -(pdf(x2,x2_pdf)); h2 = histogram(temp2.WTP, 'Normalization', 'pdf'); temp=-(h2.Values);
-x1=fitdist(temp1.WTP,'Normal'); x1_pdf = [1:1:25]; y1 = pdf(x1,x1_pdf); h1 = histogram(temp1.WTP, 'Normalization', 'pdf');
-hold on; b=bar([0:25], temp); b.BarWidth=1;
+x2=fitdist(temp2.WTP,'Normal'); x2_pdf = [1:1:25]; y2 = -(pdf(x2,x2_pdf)); h2 = histogram(temp2.WTP, 'Normalization', 'pdf', 'FaceColor', color_no_reception); temp=-(h2.Values);
+x1=fitdist(temp1.WTP,'Normal'); x1_pdf = [1:1:25]; y1 = pdf(x1,x1_pdf); h1 = histogram(temp1.WTP, 'Normalization', 'pdf', 'FaceColor', color_reception);
+hold on; b=bar([0:25], temp,'FaceColor', color_no_reception); b.BarWidth=1;
 %title('WTP to receive vs not to receive additional news', 'FontWeight','Normal');
 xlabel('Willingness-to-pay'); ylabel('Probability density');
 lg = legend('Reception','No reception','Orientation', 'horizontal','location','North');

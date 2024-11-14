@@ -147,10 +147,12 @@ table_1 = tab_model(mSuccess_truth_themes, mSuccess_truth_themes2, mSuccess_trut
 ### Emmeans
 estSuccess_truth_themes <- emmeans(mSuccess_truth_themes2_ctrld,~Theme,type = "response")
 estSuccess_truth_themes_pairs = pairs(estSuccess_truth_themes) # gives comparisons odds-ratio
+estSuccess_truth_themes_pairs_ci <- confint(estSuccess_truth_themes_pairs) # confidence intervals for the paired comparison
 estSuccess_truth_themes_size = eff_size(estSuccess_truth_themes, sigma = sigma(mSuccess_truth_themes2_ctrld), edf = Inf) # gives comparisons effect size
 
 estSuccess_truth_themes2 <- emmeans(mSuccess_truth_themes2_ctrld,~Veracity|Theme,type = "response")
 estSuccess_truth_themes_pairs2 = pairs(estSuccess_truth_themes2, reverse=TRUE) # gives comparisons odds-ratio
+estSuccess_truth_themes_pairs2_ci <- confint(estSuccess_truth_themes_pairs2) # confidence intervals for the paired comparison
 
 
 
@@ -176,6 +178,7 @@ table_2 = tab_model(mSuccess_truth_judgment, mSuccess_truth_Judgment_ctrld, show
 ### Emmeans
 estSuccess_truth_judgment <- emmeans(mSuccess_truth_Judgment_ctrld,~Veracity,type = "response") 
 estSuccess_truth_judgment_pairs = pairs(estSuccess_truth_judgment,interaction="revpairwise", type = "response") # gives comparisons odds-ratio
+estSuccess_truth_judgment_pairs_ci <- confint(estSuccess_truth_judgment_pairs) # confidence intervals for the paired comparison
 estSuccess_truth_judgment_size = eff_size(estSuccess_truth_judgment, sigma = sigma(mSuccess_truth_Judgment_ctrld), edf = Inf) # gives comparisons effect size
 
 
@@ -203,10 +206,12 @@ table_3 = tab_model(mJudgment_truth_themes, mJudgment_truth_themes2, mJudgment_t
 ### Emmeans
 estJudgment_truth_theme <- emmeans(mJudgment_truth_themes2_ctrld,~Theme,type = "response")
 estJudgment_truth_theme_pairs = pairs(estJudgment_truth_theme, type = "response") # gives comparisons odds-ratio
+estJudgment_truth_theme_pairs_ci <- confint(estJudgment_truth_theme_pairs) # confidence intervals for the paired comparison
 estJudgment_truth_theme_size = eff_size(estJudgment_truth_theme, sigma = sigma(mJudgment_truth_themes2_ctrld), edf = Inf) # gives comparisons effect size
 
 estJudgment_truth_theme2 <- emmeans(mJudgment_truth_themes2_ctrld,~Veracity|Theme,type = "response")
 estJudgment_truth_theme_pairs2 = pairs(estJudgment_truth_theme2, reverse=TRUE) # gives comparisons odds-ratio
+estJudgment_truth_theme_pairs2_ci <- confint(estJudgment_truth_theme_pairs2) # confidence intervals for the paired comparison
 
 
 
@@ -240,12 +245,12 @@ table_4 = tab_model(mSuccess_truth_ambig, mSuccess_truth_ambig_ctrld2, show.refl
 estSuccess_truth_imprec <- emmeans(mSuccess_truth_ambig_ctrld2,~Imprecision|Veracity,type = "response", cov.reduce = range)
 estSuccess_truth_imprec_pairs = pairs(estSuccess_truth_imprec,interaction="pairwise", type = "response") # gives comparisons odds-ratio
 estSuccess_truth_imprec_size = eff_size(estSuccess_truth_imprec, sigma = sigma(mSuccess_truth_ambig_ctrld2), edf = Inf) # gives comparisons effect size
-estSuccess_truth_imprec_confint = confint(estSuccess_truth_imprec_pairs)
+estSuccess_truth_imprec_ci = confint(estSuccess_truth_imprec_pairs)
 
 estSuccess_truth_polar <- emmeans(mSuccess_truth_ambig_ctrld2,~Polarization|Veracity,type = "response", cov.reduce = range)
 estSuccess_truth_polar_pairs = pairs(estSuccess_truth_polar,interaction="pairwise", type = "response") # gives comparisons odds-ratio
 estSuccess_truth_polar_size = eff_size(estSuccess_truth_polar, sigma = sigma(mSuccess_truth_ambig_ctrld2), edf = Inf) # gives comparisons effect size
-estSuccess_truth_polar_confint = confint(estSuccess_truth_polar_pairs)
+estSuccess_truth_polar_ci = confint(estSuccess_truth_polar_pairs)
 
 
 
@@ -277,15 +282,21 @@ table_5 = tab_model(mJudgment_truth_ambig, mJudgment_truth_ambig2, mJudgment_tru
 
 
 ### Emmeans
+estJudgment_imprec_pairs = pairs(emmeans(mJudgment_truth_ambig2_ctrld,~Imprecision,type = "response", cov.reduce = range), reverse=TRUE)
+estJudgment_imprec_pairs_ci = confint(estJudgment_imprec_pairs)
+
+estJudgment_polar_pairs = pairs(emmeans(mJudgment_truth_ambig2_ctrld,~Polarization,type = "response", cov.reduce = range), reverse=TRUE)
+estJudgment_polar_pairs_ci = confint(estJudgment_polar_pairs)
+
 estJudgment_truth_imprec <- emmeans(mJudgment_truth_ambig2_ctrld,~Imprecision|Veracity,type = "response", cov.reduce = range)
 estJudgment_truth_imprec_pairs = pairs(estJudgment_truth_imprec,interaction="pairwise", type = "response") # gives comparisons odds-ratio
 estJudgment_truth_imprec_size = eff_size(estJudgment_truth_imprec, sigma = sigma(mJudgment_truth_ambig2_ctrld), edf = Inf) # gives comparisons effect size
-estJudgment_truth_imprec_confint = confint(estJudgment_truth_imprec_pairs)
+estJudgment_truth_imprec_ci = confint(estJudgment_truth_imprec_pairs)
 
 estJudgment_truth_polar <- emmeans(mJudgment_truth_ambig2_ctrld,~Polarization|Veracity,type = "response", cov.reduce = range)
 estJudgment_truth_polar_pairs = pairs(estJudgment_truth_polar,interaction="pairwise", type = "response") # gives comparisons odds-ratio
 estJudgment_truth_polar_size = eff_size(estJudgment_truth_polar, sigma = sigma(mJudgment_truth_ambig2_ctrld), edf = Inf) # gives comparisons effect size
-estJudgment_truth_polar_confint = confint(estJudgment_truth_polar_pairs)
+estJudgment_truth_polar_ci = confint(estJudgment_truth_polar_pairs)
 
 
 
@@ -343,11 +354,13 @@ mConfidence_judgment_ambig2_ctrld_plot = lmer(Confidence ~ Judgment*Polarization
 estConfidence_judgment_imprec <- emmeans(mConfidence_judgment_ambig2_ctrld,~Judgment|Imprecision,type = "response", cov.reduce = function(x) quantile(x, c(0, 0.5, 1)), 
                                          non.nuisance = quote(all.vars(specs)), lmer.df = "satterthwaite", lmerTest.limit = 10944)
 estConfidence_judgment_imprec_pairs = pairs(estConfidence_judgment_imprec,interaction="revpairwise", type = "response") # gives comparisons odds-ratio
+estConfidence_judgment_imprec_pairs_ci = confint(estConfidence_judgment_imprec_pairs)
 estConfidence_judgment_imprec_size = eff_size(estConfidence_judgment_imprec, sigma = sigma(mConfidence_judgment_ambig2_ctrld), edf = Inf) # gives comparisons effect size
 
 estConfidence_judgment_polar <- emmeans(mConfidence_judgment_ambig2_ctrld,~Judgment|Polarization,type = "response", cov.reduce = function(x) quantile(x, c(0, 0.5, 1)),
                                         non.nuisance = quote(all.vars(specs)), lmer.df = "satterthwaite", lmerTest.limit = 10944)
 estConfidence_judgment_polar_pairs = pairs(estConfidence_judgment_polar,interaction="revpairwise", type = "response") # gives comparisons odds-ratio
+estConfidence_judgment_polar_pairs_ci = confint(estConfidence_judgment_polar_pairs)
 estConfidence_judgment_polar_size = eff_size(estConfidence_judgment_polar, sigma = sigma(mJudgment_truth_ambig2_ctrld), edf = Inf) # gives comparisons effect size
 
 
@@ -420,7 +433,7 @@ table_13 = tab_model(mRec_confidence2, mRec_confidence2_ctrld, show.reflvl=TRUE,
 estRec_judgment_confidence <- emmeans(mRec_confidence2_ctrld,~Confidence|Judgment,type = "response", cov.reduce = range)
 estRec_judgment_confidence_pairs = pairs(estRec_judgment_confidence,interaction="pairwise", type = "response") # gives comparisons odds-ratio
 estRec_judgment_confidence_size = eff_size(estRec_judgment_confidence, sigma = sigma(mRec_confidence2_ctrld), edf = Inf) # gives comparisons effect size
-estRec_judgment_confidence_confint = confint(estRec_judgment_confidence_pairs)
+estRec_judgment_confidence_ci = confint(estRec_judgment_confidence_pairs)
 
 
 
@@ -463,7 +476,7 @@ table_14 = tab_model(mWTP_confidence2bis, mWTP_confidence2bis_ctrld, show.reflvl
 estWTP_rec_confidence <- emmeans(mWTP_confidence2bis_ctrld,~Confidence|Reception,Reception = "response", cov.reduce = range) #cov.reduce = function(x) quantile(x, c(0, 0.5, 1)))
 estWTP_rec_confidence_pairs = pairs(estWTP_rec_confidence,interaction="pairwise", type = "response") # gives comparisons odds-ratio
 estWTP_rec_confidence_size = eff_size(estWTP_rec_confidence, sigma = sigma(mWTP_confidence2bis_ctrld), edf = Inf) # gives comparisons effect size
-estWTP_rec_confidence_confint = confint(estWTP_rec_confidence_pairs)
+estWTP_rec_confidence_ci = confint(estWTP_rec_confidence_pairs)
 estWTP_rec_confidence_2 <- emmeans(mWTP_confidence2bis_ctrld,specs = c("Confidence","Reception"), cov.reduce = range)
 estWTP_rec_confidence_2_contrast <- contrast(estWTP_rec_confidence_2,
                                              method = "revpairwise",
