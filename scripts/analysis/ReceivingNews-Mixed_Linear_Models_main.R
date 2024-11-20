@@ -29,8 +29,8 @@ if (!dir.exists(paste(project_root, "/outputs/figures/R", sep=""))){
 
 figure_path = paste(project_root, "/outputs/figures/R", sep="")
 
-if (!dir.exists(paste(project_root, "/scripts/analysis/tab_model_rand2_htmlfiles", sep=""))){
-  dir.create(paste(project_root, "/scripts/analysis/tab_model_rand2_htmlfiles", sep=""))
+if (!dir.exists(paste(project_root, "/scripts/analysis/tab_model_htmlfiles", sep=""))){
+  dir.create(paste(project_root, "/scripts/analysis/tab_model_htmlfiles", sep=""))
 }else{
   print("dir exists")
 }
@@ -139,7 +139,7 @@ mSuccess_truth_themes2_ctrld = glmer(Success ~ Veracity*Theme + Confidence + Jud
 #### Table
 table_1 = tab_model(mSuccess_truth_themes, mSuccess_truth_themes2, mSuccess_truth_themes2_ctrld, show.reflvl=TRUE, prefix.labels = "varname", auto.label=TRUE, collapse.ci=FALSE,
                     order.terms = c(1, 4, 5, 6, 7, 9, 19, 18, 10, 11, 3, 2, 12, 13, 8, 14, 15, 16, 17)
-                    , file = paste(project_root, "/scripts/analysis/tab_model_rand2_htmlfiles/tab_mSuccess_truth_themes.html", sep=""))
+                    , file = paste(project_root, "/scripts/analysis/tab_model_htmlfiles/tab_mSuccess_truth_themes.html", sep=""))
 
 
 
@@ -172,7 +172,7 @@ mSuccess_truth_Judgment_ctrld = glmer(Success ~ Judgment + Confidence + Veracity
 ### Table
 table_2 = tab_model(mSuccess_truth_judgment, mSuccess_truth_Judgment_ctrld, show.reflvl=TRUE, prefix.labels = "varname", auto.label=TRUE, collapse.ci=FALSE,
                     order.terms = c(1, 4, 5, 6, 7, 9, 10, 11, 19, 18, 3, 2, 12, 13, 8, 14, 15, 16, 17)
-                    , file = paste(project_root, "/scripts/analysis/tab_model_rand2_htmlfiles/tab_mSuccess_truth_judgment.html", sep=""))
+                    , file = paste(project_root, "/scripts/analysis/tab_model_htmlfiles/tab_mSuccess_truth_judgment.html", sep=""))
 
 
 ### Emmeans
@@ -238,7 +238,7 @@ mSuccess_truth_ambig_plot = glmer(Success ~ Veracity*Polarization + Veracity*Imp
 ### Table
 table_4 = tab_model(mSuccess_truth_ambig, mSuccess_truth_ambig_ctrld2, show.reflvl=TRUE, prefix.labels = "varname", auto.label=TRUE, collapse.ci=FALSE,
                     order.terms = c(1, 4, 5, 9, 12, 20, 21, 6, 7, 10, 11, 13, 23, 22, 3, 2, 14, 15, 8, 16, 17, 18, 19)
-                    , file = paste(project_root, "/scripts/analysis/tab_model_rand2_htmlfiles/tab_mSuccess_truth_ambig_orth.html", sep=""))
+                    , file = paste(project_root, "/scripts/analysis/tab_model_htmlfiles/tab_mSuccess_truth_ambig_orth.html", sep=""))
 
 
 ### Emmeans
@@ -278,7 +278,7 @@ mJudgment_truth_ambig_plot = glmer(Judgment ~ Veracity*Polarization + Veracity*I
 ### Table
 table_5 = tab_model(mJudgment_truth_ambig, mJudgment_truth_ambig2, mJudgment_truth_ambig2_ctrld, show.reflvl=TRUE, prefix.labels = "varname", auto.label=TRUE, collapse.ci=FALSE,
                     order.terms = c(1, 4, 5, 9, 10, 18, 19, 6, 7, 11, 21, 20, 3, 2, 12, 13, 8, 14, 15, 16, 17)
-                    , file = paste(project_root, "/scripts/analysis/tab_model_rand2_htmlfiles/tab_mJudgment_truth_ambig_orth.html", sep=""))
+                    , file = paste(project_root, "/scripts/analysis/tab_model_htmlfiles/tab_mJudgment_truth_ambig_orth.html", sep=""))
 
 
 ### Emmeans
@@ -302,7 +302,7 @@ estJudgment_truth_polar_ci = confint(estJudgment_truth_polar_pairs)
 
 
 
-##### H. MLM of Metacognition (confidence) #####
+##### G. MLM of Metacognition (confidence) #####
 
 ### Models: Organizations
 mConfidence_Ecology = lmer(Confidence ~ Greenpeace + WWF + NIPCC + Climato_realistes + 
@@ -367,11 +367,23 @@ estConfidence_judgment_polar_size = eff_size(estConfidence_judgment_polar, sigma
 ### Tables
 table_11 = tab_model(mConfidence_Ecology, mConfidence_Democracy, mConfidence_Socjust, show.reflvl=TRUE, prefix.labels = "varname", auto.label=TRUE, collapse.ci=FALSE,
                      order.terms = c(1, 2, 7, 10, 13, 4, 5, 9, 11, 3, 6, 8, 12)
-                     , file = paste(project_root, "/scripts/analysis/tab_model_rand2_htmlfiles/tab_mConfidence_organizations.html", sep=""))
+                     , file = paste(project_root, "/scripts/analysis/tab_model_htmlfiles/tab_mConfidence_organizations.html", sep=""))
 
 table_12 = tab_model(mConfidence_judgment_ambig, mConfidence_judgment_ambig2_ctrld, show.reflvl=TRUE, prefix.labels = "varname", auto.label=TRUE, collapse.ci=FALSE,
                      order.terms = c(1, 3, 4, 9, 14, 12, 13, 5, 6, 10, 11, 15, 23, 22, 8, 2, 16, 17, 7, 18, 19, 20, 21)
-                     , file = paste(project_root, "/scripts/analysis/tab_model_rand2_htmlfiles/tab_mConfidence_judgment_ambig_orth.html", sep=""))
+                     , file = paste(project_root, "/scripts/analysis/tab_model_htmlfiles/tab_mConfidence_judgment_ambig_orth.html", sep=""))
+
+
+
+
+##### H. Models of Success, Judgment and Confidence as explained by ambiguity #####
+
+table_15 = tab_model(mSuccess_truth_ambig_ctrld2, mJudgment_truth_ambig2_ctrld, mConfidence_judgment_ambig2_ctrld, show.reflvl=TRUE, prefix.labels = "varname", auto.label=TRUE, collapse.ci=FALSE,
+                     order.terms = c(1, 4, 5, 10, 15, 6, 7, 23, 24, 13, 14, 11, 12, 16, 26, 25, 3, 9, 8, 2, 17, 18, 19, 20, 21, 22)
+                     , file = paste(project_root, "/scripts/analysis/tab_model_htmlfiles/tab_mSuccess_n_Judgment_truth_imprec_rand2.html", sep=""))
+table_15
+webshot(table_15$file, paste(figure_path, "/", "tab_mAll_truth_ambig.png", sep=""))
+
 
 
 
@@ -426,7 +438,7 @@ mRec_confidence2_ctrld_coef_unst_log_odds = 1 - exp(mRec_confidence2_ctrld_coef_
 #### Table
 table_13 = tab_model(mRec_confidence2, mRec_confidence2_ctrld, show.reflvl=TRUE, prefix.labels = "varname", auto.label=TRUE, collapse.ci=FALSE,
                      order.terms = c(1, 3, 4, 5, 11, 6, 7, 9, 10, 12, 20, 19, 2, 13, 14, 8, 15, 16, 17, 18)
-                     , file = paste(project_root, "/scripts/analysis/tab_model_rand2_htmlfiles/tab_mRec_confidence.html", sep=""))
+                     , file = paste(project_root, "/scripts/analysis/tab_model_htmlfiles/tab_mRec_confidence.html", sep=""))
 
 
 ### Emmeans
@@ -469,7 +481,7 @@ mWTP_confidence_plot = lmer(WTP ~ Reception*Confidence + Veracity*Theme +
 ### Table
 table_14 = tab_model(mWTP_confidence2bis, mWTP_confidence2bis_ctrld, show.reflvl=TRUE, prefix.labels = "varname", auto.label=TRUE, collapse.ci=FALSE,
                      order.terms = c(1, 4, 5, 3, 11, 6, 7, 9, 10, 12, 20, 19, 2, 13, 14, 8, 15, 16, 17, 18)
-                     , file = paste(project_root, "/scripts/analysis/tab_model_rand2_htmlfiles/tab_mWTP_confidence.html", sep=""))
+                     , file = paste(project_root, "/scripts/analysis/tab_model_htmlfiles/tab_mWTP_confidence.html", sep=""))
 
 
 ### Emmeans
@@ -565,20 +577,8 @@ lavaanPlot::lavaanPlot(model = fit_complex_categ_mediation, node_options = list(
 
 
 
-##### POST-HOC #####
-
-table_15 = tab_model(mSuccess_truth_ambig_ctrld2, mJudgment_truth_ambig2_ctrld, mConfidence_judgment_ambig2_ctrld, show.reflvl=TRUE, prefix.labels = "varname", auto.label=TRUE, collapse.ci=FALSE,
-                     order.terms = c(1, 4, 5, 10, 15, 6, 7, 23, 24, 13, 14, 11, 12, 16, 26, 25, 3, 9, 8, 2, 17, 18, 19, 20, 21, 22)
-                     , file = paste(project_root, "/scripts/analysis/tab_model_rand2_htmlfiles/tab_mSuccess_n_Judgment_truth_imprec_rand2.html", sep=""))
-table_15
-webshot(table_15$file, paste(figure_path, "/", "tab_rand2_mAll_truth_ambig.png", sep=""))
-
-
-
-
-
 ##### SAVE #####
 
-save.image(paste(project_root, "/R_environments/ReceivingNews-Mixed_Linear_Models_main_rand2_env.RData",sep=""))
+save.image(paste(project_root, "/R_environments/ReceivingNews-Mixed_Linear_Models_main_env.RData",sep=""))
 
 invisible(lapply(paste0('package:', names(sessionInfo()$otherPkgs)), detach, character.only=TRUE, unload=TRUE))

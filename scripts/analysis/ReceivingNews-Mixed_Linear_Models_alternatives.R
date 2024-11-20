@@ -25,8 +25,8 @@ if (!dir.exists(paste(project_root, "/outputs/figures/R", sep=""))){
   print("dir exists")
 }
 
-if (!dir.exists(paste(project_root, "/scripts/analysis/tab_model_rand2_htmlfiles", sep=""))){
-  dir.create(paste(project_root, "/scripts/analysis/tab_model_rand2_htmlfiles", sep=""))
+if (!dir.exists(paste(project_root, "/scripts/analysis/tab_model_htmlfiles", sep=""))){
+  dir.create(paste(project_root, "/scripts/analysis/tab_model_htmlfiles", sep=""))
 }else{
   print("dir exists")
 }
@@ -177,16 +177,16 @@ mSuccessDistrustSocJust = glmer(Success ~ Distrust_socjust_activists + Distrust_
 ### Tables
 table_6 = tab_model(mSuccessRT, mSuccessRT_ctrld2, show.reflvl=TRUE, prefix.labels = "varname", auto.label=TRUE, collapse.ci=FALSE,
                     order.terms = c(1, 9, 3, 4, 5, 6, 7, 10, 17, 16, 2, 11, 12, 8, 13, 14, 15, 18)
-                    , file = paste(project_root, "/scripts/analysis/tab_model_rand2_htmlfiles/tab_mSuccess_alternatives_RT.html", sep=""))
+                    , file = paste(project_root, "/scripts/analysis/tab_model_htmlfiles/tab_mSuccess_alternatives_RT.html", sep=""))
 table_7 = tab_model(mSuccessConfidence, mSuccessConfidence_ctrld, show.reflvl=TRUE, prefix.labels = "varname", auto.label=TRUE, collapse.ci=FALSE,
                     order.terms = c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12, 11)
-                    , file = paste(project_root, "/scripts/analysis/tab_model_rand2_htmlfiles/tab_mSuccess_alternatives_confidence.html", sep=""))
+                    , file = paste(project_root, "/scripts/analysis/tab_model_htmlfiles/tab_mSuccess_alternatives_confidence.html", sep=""))
 table_8 = tab_model(mSuccessEcology, mSuccessDemocracy, mSuccessSocjust, show.reflvl=TRUE, prefix.labels = "varname", auto.label=TRUE, collapse.ci=FALSE,
                     order.terms = c(1, 2, 7, 10, 13, 4, 5, 9, 11, 3, 6, 8, 12)
-                    , file = paste(project_root, "/scripts/analysis/tab_model_rand2_htmlfiles/tab_mSuccess_alternatives_organizations.html", sep=""))
+                    , file = paste(project_root, "/scripts/analysis/tab_model_htmlfiles/tab_mSuccess_alternatives_organizations.html", sep=""))
 table_9 = tab_model(mSuccessRT_ctrld1, mSuccessSocioDemo, mSuccessDistrust, show.reflvl=TRUE, prefix.labels = "varname", auto.label=TRUE, collapse.ci=FALSE,
                     order.terms = c(1, 15, 10, 11, 12, 13, 16, 24, 23, 2, 17, 18, 14, 19, 20, 21, 22, 3, 4, 5, 6, 7, 8, 9)
-                    , file = paste(project_root, "/scripts/analysis/tab_model_rand2_htmlfiles/tab_mSuccess_alternatives.html", sep=""))
+                    , file = paste(project_root, "/scripts/analysis/tab_model_htmlfiles/tab_mSuccess_alternatives.html", sep=""))
 
 
 
@@ -241,7 +241,7 @@ mJudgmentDistrustSocJust = glmer(Judgment ~ Distrust_socjust_activists + Distrus
 ### Table
 table_10 = tab_model(mJudgmentRT, mJudgmentConfidence, show.reflvl=TRUE, prefix.labels = "varname", auto.label=TRUE, collapse.ci=FALSE,
                      order.terms = c(1, 2, 3, 4, 5, 6, 7, 8, 10, 9)
-                     , file = paste(project_root, "/scripts/analysis/tab_model_rand2_htmlfiles/tab_mJudgment_alternatives.html", sep=""))
+                     , file = paste(project_root, "/scripts/analysis/tab_model_htmlfiles/tab_mJudgment_alternatives.html", sep=""))
 
 
 
@@ -393,6 +393,6 @@ estWTP_judgment_polar_size = eff_size(estWTP_judgment_polar, sigma = sigma(mWTP_
 
 ##### SAVE #####
 
-save.image(paste(project_root, "/R_environments/ReceivingNews-Mixed_Linear_Models_alternatives_rand2_env.RData",sep=""))
+save.image(paste(project_root, "/R_environments/ReceivingNews-Mixed_Linear_Models_alternatives_env.RData",sep=""))
 
 invisible(lapply(paste0('package:', names(sessionInfo()$otherPkgs)), detach, character.only=TRUE, unload=TRUE))

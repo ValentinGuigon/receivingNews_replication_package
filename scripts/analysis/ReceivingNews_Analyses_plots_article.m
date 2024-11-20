@@ -67,6 +67,28 @@ color_no_reception = [0.9882, 0.5137, 0];
 
 %% SUCCESS RATES
 
+% Plot Share of correct judgments against Theoretical random distribution
+h = figure; tiledlayout(1,1)
+nexttile; set(h, 'DefaultTextFontSize', 16); m=0;
+% Generate 258 draws of each 48 binary trials with p = 0.5
+n = 48*ones(258,1); p = 0.5; r = binornd(n,p); 
+% Transform to frequency
+r = r/48;
+histogram(r, 20,'Normalization', 'pdf', 'FaceColor','white','facealpha', 1, 'LineWidth', 1.25);
+hold on
+x1=fitdist(Rec_allSub.data_tables(5).models.freq_1/100,'Normal'); x1_pdf = [0:0.1:1]; y1 = pdf(x1,x1_pdf);
+histogram(Rec_allSub.data_tables(5).models.freq_1/100, 20,'Normalization', 'pdf','FaceColor',[0 0.4470 0.7410],'facealpha', .8,'EdgeColor','none');
+%line(x1_pdf,y1);
+a = get(gca,'XTickLabel');
+set(gca,'XTickLabel',a,'fontsize',18)
+title(strcat("Distribution of participants' ability to estimate truthfulness")); 
+xlabel('Proportion of correct judgments'); ylabel('Probability density');
+legend('Theoretical random distribution','Empirical correct judgments');
+
+
+
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % 2-LEVELS COMPARISONS: THEME * VERACITY, WITHIN EACH GROUPS & REGARDLESS OF GROUPS
 % Plot Share of correct judgments for True vs False for each theme
@@ -148,97 +170,6 @@ set(lg,'Box','off')
 saveas(gcf,strcat(project_root,'/outputs/figures/Matlab/Success_perTruthfulness_perTheme.png'))
 saveas(gcf,strcat(project_root,'/outputs/figures/Matlab/Success_perTruthfulness_perTheme.tif'))
 
-
-
-
-
-% SUCCESS AGAINST IMPRECISION FOR NEWS PERCEIVED AS TRUE OR FALSE
-clear temp tmp temp2 tmp2
-m = 0; [x1_ii, x1_sum, x1_level, x2_ii, x2_sum, x2_level] = deal(double.empty(0,1));
-h = figure; tiledlayout(1,1)
-nexttile
-for ii = 1:length(idnews)
-    tmp = plots_data(plots_data.idnews == idnews(ii), :);
-    if tmp.veracity(1) == 1
-        x1_ii(end+1) = ii;
-        x1_sum(end+1) = sum(tmp.success)/length(tmp.success);
-        x1_level(end+1) = mean(table2array(plots_data(plots_data.idnews == idnews(ii), 14)));
-    elseif tmp.veracity(1) == 0
-        x2_ii(end+1) = ii;
-        x2_sum(end+1) = sum(tmp.success)/length(tmp.success);
-        x2_level(end+1) = mean(table2array(plots_data(plots_data.idnews == idnews(ii), 14)));
-    end
-end
-
-p1 = polyfit(x1_level,x1_sum,1); f1 = polyval(p1,x1_level);
-p2 = polyfit(x2_level,x2_sum,1); f2 = polyval(p2,x2_level);
-hold on;
-
-line([0 10],[0.5 0.5], 'Color',[0.7 0.7 0.7],'LineStyle','--');
-line(x1_level,f1,'Color',color_true, 'LineWidth', 1.5);
-p1 = plot(x1_level, x1_sum, 'LineWidth',1.5,'MarkerSize',10,'LineStyle','none', 'Marker', 'diamond', 'Color', color_true); 
-line(x2_level,f2,'Color',color_false', 'LineWidth', 1.5);
-p2 = plot(x2_level, x2_sum, 'LineWidth',1.5,'MarkerSize',10,'LineStyle','none', 'Marker', 'diamond', 'Color', color_false); 
-lg = legend([p1 p2], 'True news', 'False news', 'Orientation', 'horizontal');
-lg.Layout.Tile = 'North';
-set(lg,'Box','off')
-set(gca,'linewidth',1)
-ylim([0 1])
-yticks([0:0.2:1])
-xlim([min([x1_level x2_level]) max([x1_level x2_level])])
-% title('Frequency of correct truthfulness estimations');
-xlabel('Imprecision'); ylabel('Correct judgments');
-set(gca,'Unit','normalized','Position',[0.15 0.25 0.82 0.72]);
-
-saveas(gcf,strcat(project_root,'/outputs/figures/Matlab/Success_perTruthfulness_predImprecision.png'))
-saveas(gcf,strcat(project_root,'/outputs/figures/Matlab/Success_perTruthfulness_predImprecision.tif'))
-
-
-
-
-
-
-
-% JUDGMENT AGAINST IMPRECISION FOR NEWS PERCEIVED AS TRUE OR FALSE
-clear temp tmp temp2 tmp2
-m = 0; [x1_ii, x1_sum, x1_level, x2_ii, x2_sum, x2_level] = deal(double.empty(0,1));
-h = figure; tiledlayout(1,1)
-nexttile
-for ii = 1:length(idnews)
-    tmp = plots_data(plots_data.idnews == idnews(ii), :);
-    if tmp.veracity(1) == 1
-        x1_ii(end+1) = ii;
-        x1_sum(end+1) = sum(tmp.judgment)/length(tmp.judgment);
-        x1_level(end+1) = mean(table2array(plots_data(plots_data.idnews == idnews(ii), 14)));
-    elseif tmp.veracity(1) == 0
-        x2_ii(end+1) = ii;
-        x2_sum(end+1) = sum(tmp.judgment)/length(tmp.judgment);
-        x2_level(end+1) = mean(table2array(plots_data(plots_data.idnews == idnews(ii), 14)));
-    end
-end
-
-p1 = polyfit(x1_level,x1_sum,1); f1 = polyval(p1,x1_level);
-p2 = polyfit(x2_level,x2_sum,1); f2 = polyval(p2,x2_level);
-hold on;
-
-line([0 10],[0.5 0.5], 'Color',[0.7 0.7 0.7],'LineStyle','--');
-line(x1_level,f1,'Color',color_true, 'LineWidth', 1.5);
-p1 = plot(x1_level, x1_sum, 'LineWidth',1.5,'MarkerSize',10,'LineStyle','none', 'Marker', 'diamond', 'Color', color_true); 
-line(x2_level,f2,'Color',color_false, 'LineWidth', 1.5);
-p2 = plot(x2_level, x2_sum, 'LineWidth',1.5,'MarkerSize',10,'LineStyle','none', 'Marker', 'diamond', 'Color', color_false); 
-lg = legend([p1 p2], 'True news', 'False news', 'Orientation', 'horizontal');
-lg.Layout.Tile = 'North';
-set(lg,'Box','off')
-set(gca,'linewidth',1)
-ylim([0 1])
-yticks([0:0.2:1])
-xlim([min([x1_level x2_level]) max([x1_level x2_level])])
-% title('Frequency of judgments as true');
-xlabel('Imprecision'); ylabel('Judgments as true');
-set(gca,'Unit','normalized','Position',[0.15 0.25 0.82 0.72]);
-
-saveas(gcf, strcat(project_root,'/outputs/figures/Matlab/Judgment_perTruthfulness_predImprecision.png'))
-saveas(gcf, strcat(project_root,'/outputs/figures/Matlab/Judgment_perTruthfulness_predImprecision.tif'))
 
 
 
@@ -455,146 +386,7 @@ saveas(gcf, strcat(project_root,'/outputs/figures/Matlab/Metacognition_calibrati
 
 
 
-%% RECEPTION DESIRABILITY
-
-
-% 2-LEVELS COMPARISONS: THEME * VERACITY, WITHIN EACH GROUPS & REGARDLESS OF GROUPS
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% PLOT REC
-
-% Plot REC: Bin by 10 units
-clear temp tmp temp2 tmp2
-m=0; temp = zeros(10,5); temp2 = zeros(10,5);
-for ii = 1:10
-    tmp = table2array(plots_data(plots_data.eval >= 1+m & plots_data.eval < ii*10, 10)); % disp([1+m, ii*10])
-    temp(ii,1)=ii*10;      temp(ii,2) = sum(tmp==1)/length(tmp);
-    [phat,pci] = binofit(sum(tmp==1),length(tmp));
-    temp(ii,3) = phat; temp(ii,4) = pci(1); temp(ii,5) = pci(2);
-    
-    tmp2 = table2array(plots_data(plots_data.eval <= -1-m & plots_data.eval > -ii*10, 10));
-    temp2(ii,1)=-ii*10;    temp2(ii,2) = sum(tmp2==1)/length(tmp2);
-    [phat2,pci2] = binofit(sum(tmp2==1),length(tmp2));
-    temp2(ii,3) = phat2; temp2(ii,4) = pci2(1); temp2(ii,5) = pci2(2);
-    m=m+10;
-end
-supertemp= [temp; temp2]; %bar(supertemp(:,1),supertemp(:,2));
-
-
-
-
-x1=supertemp(1:10,1); y1=supertemp(1:10,2);
-x2=supertemp(1:10,1); y2=supertemp(11:20,2);
-
-figure
-p1 = polyfit(x1,y1,1); f1 = polyval(p1,x1);
-p2 = polyfit(x2,y2,1); f2 = polyval(p2,x2);
-hold on;
-
-line(x1,f1,'Color',color_judgment_true, 'LineWidth', 1.5);
-p1 = plot(x1, y1, 'LineWidth',1.5,'MarkerSize',10,'LineStyle','none', 'Marker', 'diamond', 'Color', color_judgment_true); 
-line(x2,f2,'Color',color_judgment_false, 'LineWidth', 1.5);
-p2 = plot(x2, y2, 'LineWidth',1.5,'MarkerSize',10,'LineStyle','none', 'Marker', 'diamond', 'Color', color_judgment_false); 
-
-line([10 100],[0.5 0.5], 'Color',[0.7 0.7 0.7],'LineStyle','--');
-for ii = 1:10
-    line([x1(ii) x1(ii)], [supertemp(ii,4) supertemp(ii,5)], 'Color', color_judgment_true, 'LineWidth', 1);
-    line([x2(ii) x2(ii)], [supertemp(ii+10,4) supertemp(ii+10,5)], 'Color', color_judgment_false, 'LineWidth', 1);
-end
-
-ylim([0.25 0.75])
-xlim([10 100])
-%xticklabels({'', '11-20', '', '31-40', '', '51-60', '', '71-80', '', '91-100'});
-a = get(gca,'XTickLabel');
-set(gca,'XTickLabel',a,'fontsize',16)
-legend([p1 p2], 'News judged as true', 'News judged as false')
-title('Average probability to receive more news');
-xlabel('Confidence degree'); ylabel('Reception probability + CI');
-xticklabels({'11-20', '31-40', '51-60', '71-80', '91-100'});
-
-saveas(gcf, strcat(project_root,'/outputs/figures/Matlab/Reception_perTruthfulness_predConfidence.png'))
-saveas(gcf, strcat(project_root,'/outputs/figures/Matlab/Reception_perTruthfulness_predConfidence.tif'))
-
-
-
-
-
-% RECEPTION AGAINST CONFIDENCE FOR NEWS TRUE OR FALSE
-clear tmp x1_ii x1_sum x1_level x2_ii x2_sum x2_level
-m = 0; [x1_ii, x1_sum, x1_level, x2_ii, x2_sum, x2_level] = deal(double.empty(0,1));
-h = figure; tiledlayout(1,1)
-nexttile
-for ii = 1:nbs
-    tmp = allSubAllTrial(allSubAllTrial.subject == ii, :);
-    
-    x1_ii(end+1) = ii;
-    x1_sum(end+1) = sum(tmp.rec(tmp.judgment==1))/length(tmp.rec(tmp.judgment==1));
-    x1_level(end+1) = mean(table2array(tmp(tmp.subject == ii & tmp.judgment==1, 6)));
-    
-    x2_ii(end+1) = ii;
-    x2_sum(end+1) = sum(tmp.rec(tmp.judgment==0))/length(tmp.rec(tmp.judgment==0));
-    x2_level(end+1) = mean(table2array(tmp(tmp.subject == ii & tmp.judgment==1, 6)));
-end
-
-p1 = polyfit(x1_level,x1_sum,1); f1 = polyval(p1,x1_level);
-p2 = polyfit(x2_level,x2_sum,1); f2 = polyval(p2,x2_level);
-hold on;
-
-line([0 100],[0.5 0.5], 'Color',[0.7 0.7 0.7],'LineStyle','--');
-line(x1_level,f1,'Color',color_judgment_true, 'LineWidth', 1.5);
-p1 = plot(x1_level, x1_sum, 'LineWidth',1.5,'MarkerSize',10,'LineStyle','none', 'Marker', '.', 'Color', color_judgment_true); 
-line(x2_level,f2,'Color',color_judgment_false, 'LineWidth', 1.5);
-p2 = plot(x2_level, x2_sum, 'LineWidth',1.5,'MarkerSize',10,'LineStyle','none', 'Marker', '.', 'Color', color_judgment_false); 
-lg = legend([p1 p2], 'Judged as True', 'Judged as False', 'Orientation', 'horizontal');
-lg.Layout.Tile = 'North';
-set(lg,'Box','off')
-set(gca,'linewidth',1)
-ylim([0 1])
-yticks([0:0.2:1])
-xlim([min([x1_level x2_level]) max([x1_level x2_level])])
-% title('Frequency of judgments as true');
-xlabel('Confidence'); ylabel('Reception probability');
-set(gca,'Unit','normalized','Position',[0.15 0.25 0.82 0.72]);
-set(gca,'linewidth',1)
-
-saveas(gcf, strcat(project_root,'/outputs/figures/Matlab/Reception_perTruthfulness_predConfidence2.png'))
-saveas(gcf, strcat(project_root,'/outputs/figures/Matlab/Reception_perTruthfulness_predConfidence2.tif'))
-
-
-
-
-
-
-
-
-
-
-
 %% WTP
-
-% WTP FOR NEWS DESIRED/UNDESIRED
-clear temp tmp temp2 tmp2
-temp1 = plots_data(plots_data{:,10}==1,:); temp2 = plots_data(plots_data{:,10}==0,:);
-h = figure;
-t = tiledlayout(1,1);
-nexttile
-x2=fitdist(temp2.WTP,'Normal'); x2_pdf = [1:1:25]; y2 = -(pdf(x2,x2_pdf)); h2 = histogram(temp2.WTP, 'Normalization', 'pdf', 'FaceColor', color_no_reception); temp=-(h2.Values);
-x1=fitdist(temp1.WTP,'Normal'); x1_pdf = [1:1:25]; y1 = pdf(x1,x1_pdf); h1 = histogram(temp1.WTP, 'Normalization', 'pdf', 'FaceColor', color_reception);
-hold on; b=bar([0:25], temp,'FaceColor', color_no_reception); b.BarWidth=1;
-%title('WTP to receive vs not to receive additional news', 'FontWeight','Normal');
-xlabel('Willingness-to-pay'); ylabel('Probability density');
-lg = legend('Reception','No reception','Orientation', 'horizontal','location','North');
-set(gca,'YLim',[-0.3 0.3])
-set(gca,'linewidth',1)
-set(gca, 'box', 'off')
-set(lg,'Box','off')
-yticks(-0.3:0.1:0.3)
-
-saveas(gcf, strcat(project_root,'/outputs/figures/Matlab/WTP_perReception.png'))
-saveas(gcf, strcat(project_root,'/outputs/figures/Matlab/WTP_perReception.tif'))
-
-
-
-
 
 clear temp tmp temp2 tmp2
 
@@ -673,9 +465,6 @@ end
 
 judgment_per_dist = struct('pro', struct('socjust',0,'democracy',0,'ecology',0), 'con', struct('socjust',0,'democracy',0,'ecology',0));
 success_per_dist = judgment_per_dist;
-seeking_per_dist = judgment_per_dist;
-WTP_receive_per_dist = judgment_per_dist;
-WTP_avoid_per_dist = judgment_per_dist;
 
 for valence = ["pro", "con"]
     for theme = unique(plots_data.theme)'
@@ -699,9 +488,6 @@ for valence = ["pro", "con"]
 
             judgment_per_dist.(valence).(theme_names(theme))(sub_sub) = sum(data.judgment(data.theme == theme)) / length(data.judgment(data.theme == theme))';
             success_per_dist.(valence).(theme_names(theme))(sub_sub) = sum(data.success(data.theme == theme)) / length(data.success(data.theme == theme))';
-            seeking_per_dist.(valence).(theme_names(theme))(sub_sub) = sum(data.rec(data.theme == theme)) / length(data.rec(data.theme == theme))';
-            WTP_receive_per_dist.(valence).(theme_names(theme))(sub_sub) = mean(data.WTP(data.theme == theme & data.rec == 1));
-            WTP_avoid_per_dist.(valence).(theme_names(theme))(sub_sub) = mean(data.WTP(data.theme == theme & data.rec == 0));
             sub_sub=sub_sub+1;
         end
     end
@@ -718,33 +504,17 @@ for valence = ["pro", "con"]
         [success_per_dist.(valence).socjust...
         success_per_dist.(valence).democracy...
         success_per_dist.(valence).ecology]';
-    
-    seeking_per_dist.(valence).(pooled) = ...
-        [seeking_per_dist.(valence).socjust...
-        seeking_per_dist.(valence).democracy...
-        seeking_per_dist.(valence).ecology]';
-    
-    WTP_receive_per_dist.(valence).(pooled) = ...
-        [WTP_receive_per_dist.(valence).socjust...
-        WTP_receive_per_dist.(valence).democracy...
-        WTP_receive_per_dist.(valence).ecology]';
-    
-    WTP_avoid_per_dist.(valence).(pooled) = ...
-        [WTP_avoid_per_dist.(valence).socjust...
-        WTP_avoid_per_dist.(valence).democracy...
-        WTP_avoid_per_dist.(valence).ecology]';
 end
 
 
 %% BELIEFS
 
-data_per_dist = struct("judgment_per_dist", judgment_per_dist, "success_per_dist", success_per_dist, "seeking_per_dist", ...
-    seeking_per_dist, "WTP_receive_per_dist", WTP_receive_per_dist, "WTP_avoid_per_dist", WTP_avoid_per_dist);
-variable_names = ["Judgments", "Success", "Reception", "WTP to receive", "WTP not to receive"]; 
-variables = ["judgment_per_dist", "success_per_dist", "seeking_per_dist", "WTP_receive_per_dist", "WTP_avoid_per_dist"];
+data_per_dist = struct("judgment_per_dist", judgment_per_dist, "success_per_dist", success_per_dist);
+variable_names = ["Judgments", "Success"]; 
+variables = ["judgment_per_dist", "success_per_dist"];
 
 
-for j = 1:3
+for j = 1:2
     h = figure; 
     T = tiledlayout(1,1,'TileSpacing','compact');
     taille = 16; 
@@ -799,109 +569,3 @@ for j = 1:3
     saveas(gcf, strcat(project_root, '/outputs/figures/Matlab/', variables(j), 'per_theme.png'))
     saveas(gcf, strcat(project_root, '/outputs/figures/Matlab/', variables(j), 'per_theme.tif'))
 end
-
-
-for j = 1:3
-    h = figure; 
-    T = tiledlayout(1,1,'TileSpacing','compact');
-    taille = 16; 
-    set(h, 'DefaultTextFontSize', taille); 
-    set(T, 'DefaultTextFontSize', taille);
-    ylabel(T,'Proportion (%)','FontSize',taille); 
-    x = categorical(theme_names);
-    
-    nexttile; 
-    hold on;
-    
-    if j < 4
-        ylim([0.3 0.71]); 
-        line([0 3], [0.5 0.5], 'Color',[.7 .7 .7],'LineStyle','--')
-    else
-        ylim([0 10]); 
-        line([0 3], [5 5], 'Color',[.7 .7 .7],'LineStyle','--')
-    end
-    
-    pro_data = data_per_dist.(variables(j)).pro.pooled(:);
-    con_data = data_per_dist.(variables(j)).con.pooled(:);
-    
-    y = [mean(pro_data, 'omitnan'); mean(con_data, 'omitnan')];
-    errors = [std(pro_data, 'omitnan') / sqrt(numel(pro_data)); 
-              std(con_data, 'omitnan') / sqrt(numel(con_data))];
-    
-    b = bar(y);
-    errorbar(1:2, y, errors, 'k', 'LineStyle', 'none', 'LineWidth', 0.9);
-    
-    jitter_amount = 0.05;
-    scatter(1 + jitter_amount * randn(size(pro_data)), pro_data, 10, 'MarkerEdgeColor', [0.6 0.6 0.6], 'MarkerFaceColor', [0.8 0.8 0.8], 'MarkerFaceAlpha', 0.5);
-    scatter(2 + jitter_amount * randn(size(con_data)), con_data, 10, 'MarkerEdgeColor', [0.6 0.6 0.6], 'MarkerFaceColor', [0.8 0.8 0.8], 'MarkerFaceAlpha', 0.5);
-    
-    title(variable_names(j)); 
-    xticks([1 2]); 
-    set(gca,'xticklabel',{'Alignment'; 'Misalignment'}); 
-    xtickangle(15);
-    
-    saveas(gcf, strcat(project_root,'/outputs/figures/Matlab/', variables(j), '.png'));
-    saveas(gcf, strcat(project_root,'/outputs/figures/Matlab/', variables(j), '.tif'));
-end
-
-
-
-h = figure; T = tiledlayout(1,2,'TileSpacing','compact');
-taille=16; set(h, 'DefaultTextFontSize', taille); set(T, 'DefaultTextFontSize', taille);
-ylabel(T,'Willingness-To-Pay (ECU)','FontSize',taille); x = categorical(theme_names);
-for j = 4:5
-    ax = nexttile; 
-    hold on;
-    
-    ylim([0 15]); 
-    xlim([0.5 2.5]); 
-    line([0.5 2.5], [5 5], 'Color',[.7 .7 .7],'LineStyle','--', 'HandleVisibility','off');
-    
-    pro_ecology = data_per_dist.(variables(j)).pro.ecology(:);
-    pro_democracy = data_per_dist.(variables(j)).pro.democracy(:);
-    pro_socjust = data_per_dist.(variables(j)).pro.socjust(:);
-    
-    con_ecology = data_per_dist.(variables(j)).con.ecology(:);
-    con_democracy = data_per_dist.(variables(j)).con.democracy(:);
-    con_socjust = data_per_dist.(variables(j)).con.socjust(:);
-    
-    y = [mean(pro_ecology, 'omitnan') mean(pro_democracy, 'omitnan') mean(pro_socjust, 'omitnan');
-         mean(con_ecology, 'omitnan') mean(con_democracy, 'omitnan') mean(con_socjust, 'omitnan')];
-    errors = [std(pro_ecology, 'omitnan') / sqrt(numel(pro_ecology)) std(pro_democracy, 'omitnan') / sqrt(numel(pro_democracy)) std(pro_socjust, 'omitnan') / sqrt(numel(pro_socjust));
-              std(con_ecology, 'omitnan') / sqrt(numel(con_ecology)) std(con_democracy, 'omitnan') / sqrt(numel(con_democracy)) std(con_socjust, 'omitnan') / sqrt(numel(con_socjust))];
-    
-    b = bar(y, 'grouped');
-    bar_colors = [b(1).FaceColor; b(2).FaceColor; b(3).FaceColor];
-    [ngroups, nbars] = size(y);
-    x = nan(nbars, ngroups);
-    for i = 1:nbars
-        x(i, :) = b(i).XEndPoints;
-    end
-    
-    scatter_x_offsets = 0.05;
-    scatter(x(1, 1) + scatter_x_offsets * randn(size(pro_ecology)), pro_ecology, 15, ...
-        'MarkerEdgeColor', [0.7 0.7 0.7], 'MarkerFaceColor', bar_colors(1,:) * 0.8, 'MarkerFaceAlpha', 0.6);
-    scatter(x(2, 1) + scatter_x_offsets * randn(size(pro_democracy)), pro_democracy, 15, ...
-        'MarkerEdgeColor', [0.7 0.7 0.7], 'MarkerFaceColor', bar_colors(2,:) * 0.8, 'MarkerFaceAlpha', 0.6);
-    scatter(x(3, 1) + scatter_x_offsets * randn(size(pro_socjust)), pro_socjust, 15, ...
-        'MarkerEdgeColor', [0.7 0.7 0.7], 'MarkerFaceColor', bar_colors(3,:) * 0.8, 'MarkerFaceAlpha', 0.6);
-    scatter(x(1, 2) + scatter_x_offsets * randn(size(con_ecology)), con_ecology, 15, ...
-        'MarkerEdgeColor', [0.7 0.7 0.7], 'MarkerFaceColor', bar_colors(1,:) * 0.8, 'MarkerFaceAlpha', 0.6);
-    scatter(x(2, 2) + scatter_x_offsets * randn(size(con_democracy)), con_democracy, 15, ...
-        'MarkerEdgeColor', [0.7 0.7 0.7], 'MarkerFaceColor', bar_colors(2,:) * 0.8, 'MarkerFaceAlpha', 0.6);
-    scatter(x(3, 2) + scatter_x_offsets * randn(size(con_socjust)), con_socjust, 15, ...
-        'MarkerEdgeColor', [0.7 0.7 0.7], 'MarkerFaceColor', bar_colors(3,:) * 0.8, 'MarkerFaceAlpha', 0.6);
-    
-    errorbar(x', y, errors, 'k', 'LineStyle', 'none', 'LineWidth', 0.9);
-    
-    title(variable_names(j)); 
-    xticks([1 2]); 
-    set(gca, 'xticklabel', {'Alignment', 'Misalignment'});
-    xtickangle(15);
-end
-lg = legend(ax, b(:), {'Ecology', 'Democracy', 'Social justice'}, 'Orientation', 'horizontal', 'Location', 'northoutside');
-lg.Layout.Tile = 'North';
-set(lg, 'Box', 'off');
-    
-saveas(gcf, strcat(project_root,'/outputs/figures/Matlab/', 'WTP', 'per_theme.png'))
-saveas(gcf, strcat(project_root,'/outputs/figures/Matlab/', 'WTP', 'per_theme.tif'))

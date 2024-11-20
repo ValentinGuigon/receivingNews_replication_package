@@ -1,0 +1,738 @@
+---
+title: "Receiving news - Mixed Linear models"
+editor_options: 
+  markdown: 
+    wrap: 72
+---
+
+```         
+By Valentin Guigon
+June 2023
+```
+
+
+```{r global-options and variables, include=FALSE}
+
+rm(list = ls(all.names = TRUE)) #will clear all objects includes hidden objects.
+gc() #free up memory and report the memory usage
+
+
+list.of.packages <- c("lme4", "ggplot2", "sjPlot", "emmeans", "interactions", "jtools", 
+                      "tidyverse", "ggpubr", "mediation", "RColorBrewer",
+                      "flextable", "rprojroot", "webshot", "stargazer", 
+                      "devtools", "lavaan", "lavaanExtra", "png", "rsvg", "DiagrammeRsvg") 
+{
+  new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
+  if(length(new.packages)) install.packages(new.packages)
+  lapply(list.of.packages, require, character.only = TRUE)
+}
+
+# To get the latest lavaanplot update (0.8.0 at least)
+if (require(lavaanPlot)) { # The package is installed
+  cat("lavaanPlot is installed.\n\n Now loading.")
+  library(lavaanPlot)
+} else { # The package is not installed
+  cat("lavaanPlot is not installed.\n\n Now downloading.")
+  devtools::install_github("alishinski/lavaanPlot")
+}
+
+# set paths and mk necessary directories
+set.seed(12345)
+project_root = find_rstudio_root_file()
+knitr::opts_knit$set(root.dir = paste(project_root,"/outputs/reports", sep=""))
+
+if (!dir.exists(paste(project_root, "/outputs/figures/R", sep=""))){
+  dir.create("/outputs/figures/R")
+}else{
+  print("dir exists")
+}
+
+figure_path = paste(project_root, "/outputs/figures/R", sep="")
+
+
+# load the environments
+load(paste(project_root, "/R_environments/ReceivingNews-Mixed_Linear_Models_main_env.Rdata", sep=""))
+load(paste(project_root, "/R_environments/ReceivingNews-Mixed_Linear_Models_alternatives_env.Rdata", sep=""))
+
+
+# Note that we didn't assign random effects into a nested structure such as Year/Group/Subject to save computation time (time could >15 min per glmer)
+```
+
+
+
+
+
+# I. Mixed Linear Models
+## A. MLM of success: Better performances for true news
+
+We test models of success as explained by the veracity of news:
+`r table_1`
+
+```{r generate output of table_1, echo=FALSE, include=FALSE, results = 'hide'}
+table_1
+
+webshot(table_1$file, paste(figure_path, "/", "tab_mSuccess_truth_themes.png", sep=""), zoom = 3)
+
+```
+
+<br> <br>
+
+We compute estimated marginal means (emmeans) of success as explained by 
+the model of veracity interacting with theme, controlled as follow:
+                                       
+```{r echo=FALSE}
+formula(mSuccess_truth_themes2_ctrld)
+```
+
+The success probability for each theme is: 
+
+```{r MLM of success: Better performances for true news: emmeans prob, echo=FALSE}
+
+estSuccess_truth_themes # gives each level prob
+
+```
+The success rate was significantly higher for ecology-related and social justice-related news compared to democracy-related news:
+
+```{r MLM of success: Better performances for true news: emmeans pairs, echo=FALSE}
+
+estSuccess_truth_themes_pairs # gives comparisons odds-ratio
+estSuccess_truth_themes_pairs_ci
+# estSuccess_truth_themes_size # gives comparisons effect size
+
+```
+
+Looking into the difference for themes between news veracity, the success probability is:
+
+```{r MLM of success: Better performances for true news: emmeans prob 2, echo=FALSE}
+
+estSuccess_truth_themes2 # gives comparisons odds-ratio
+
+```
+
+The three themes elicit more success when the news are true than false:
+
+```{r MLM of success: Better performances for true news: emmeans pairs 2, echo=FALSE}
+
+estSuccess_truth_themes_pairs2 # gives comparisons odds-ratio
+estSuccess_truth_themes_pairs2_ci
+
+```
+
+
+
+
+
+## B. MLM of success: Biased in judgment
+
+We test models of success as explained by the judgment of news:
+`r table_2`
+
+<br> <br>
+
+We compute estimated marginal means (emmeans) of success as explained by 
+the model of judgment interacting with the veracity, controlled as follows:
+
+```{r echo=FALSE}
+formula(mSuccess_truth_Judgment_ctrld)
+```
+
+The probability of success for true and false news is: 
+
+```{r MLM of success: Biased in judgment: emmeans prob, echo=FALSE}
+
+estSuccess_truth_judgment 
+
+```
+
+Participants were significantly better at predicting the veracity of true news than the falsity of false news:
+
+```{r MLM of success: Biased in judgment: emmeans pairs, echo=FALSE}
+
+estSuccess_truth_judgment_pairs
+estSuccess_truth_judgment_pairs_ci
+# estSuccess_truth_judgment_size
+
+```
+
+
+
+
+
+## C. MLM of judgment: Biased in judgment
+
+We test models of judgment as explained by the veracity of news:
+`r table_3`
+
+```{r generate output of table_3, echo=FALSE, include=FALSE, results = 'hide'}
+table_3
+
+webshot(table_3$file, paste(figure_path, "/", "tab_mJudgment_truth_themes.png", sep=""), zoom = 3)
+```
+
+<br> <br>
+
+We compute estimated marginal means (emmeans) of judgment as explained by
+the model of veracity interacting with the theme, controlled as follows: 
+
+```{r echo=FALSE}
+formula(mJudgment_truth_themes2_ctrld)
+```
+
+The probability of judgment for each theme is: 
+
+```{r MLM of judgment: Biased in judgment: emmeans prob, echo=FALSE}
+
+estJudgment_truth_theme
+
+```
+
+Participants were significantly more likely to judge a news as true when the news was related to ecology and social justice compared to democracy:
+
+```{r MLM of judgment: Biased in judgment: emmeans pairs, echo=FALSE}
+
+estJudgment_truth_theme_pairs
+estJudgment_truth_theme_pairs_ci
+# estJudgment_truth_theme_size
+
+```
+
+Looking into the difference for themes between news veracity, the success probability is:
+
+```{r MLM of judgment: Biased in judgment: emmeans prob 2, echo=FALSE}
+
+estJudgment_truth_theme2 # gives comparisons odds-ratio
+
+```
+
+News about ecology or social justice elicit more judgments as true when the news are true than false, however we found the inverse for news about democracy:
+
+```{r MLM of judgment: Biased in judgment: emmeans pairs 2, echo=FALSE}
+
+estJudgment_truth_theme_pairs2 # gives comparisons odds-ratio
+estJudgment_truth_theme_pairs2_ci
+
+```
+
+
+
+
+
+## D. MLM of success: interaction effect of imprecision with veracity
+
+We test models of success as explained by the level of news content imprecision:
+`r table_4`
+
+<br> <br>
+
+We compute estimated marginal means (emmeans) of success as explained by
+the model of imprecision interacting with the veracity, controlled as follows:
+
+```{r echo=FALSE}
+formula(mSuccess_truth_ambig_ctrld2)
+```
+
+The probability of success for true and false news, given an imprecision at the lowest or highest level, is: 
+
+```{r MLM of success: imprecision effect: emmeans prob, echo=FALSE}
+
+estSuccess_truth_imprec
+
+```
+
+Success was more likely for true news when their content Polarization was at its minimum and it was more likely for false news when their content Polarization was at its maximum:
+
+```{r MLM of success: imprecision effect: emmeans pairs, echo=FALSE}
+
+estSuccess_truth_imprec_pairs
+estSuccess_truth_imprec_ci
+# estSuccess_truth_imprec_size
+
+```
+
+The probability of success for true and false news, given a Polarization at the lowest or highest level, is: 
+
+```{r MLM of success: polarization effect: emmeans prob, echo=FALSE}
+
+estSuccess_truth_polar
+
+```
+
+Success was more likely for true news when their content imprecision was at its minimum and it was more likely for false news when their content imprecision was at its maximum:
+
+```{r MLM of success: polarization effect: emmeans pairs, echo=FALSE}
+
+estSuccess_truth_polar_pairs
+estSuccess_truth_polar_ci
+# estSuccess_truth_polar_size
+
+```
+
+
+<br> Plots for imprecision:
+
+```{r success by imprecision plots, echo=FALSE, results="hide"}
+
+# plot interaction via ggplot
+Plot_successImprec <- interact_plot(mSuccess_truth_ambig_ctrld2, pred = Imprecision, modx = Veracity, plot.points = FALSE,interval = TRUE, outcome.scale="response", colors = c("#F8766D", "#00BFC4"))
+# outcome.scale="link" -> to plot on a linear scale; outcome.scale="response" -> to plot on data original scale
+
+Plot_successImprec <- Plot_successImprec + 
+  theme_pubr() +
+  theme(axis.text = element_text(size = 18)) + theme(axis.title = element_text(size = 18)) + 
+  theme(legend.title = element_text(size = 18)) + 
+  theme(legend.text = element_text(size = 18),axis.title.y = element_text(size=18),
+        axis.title.x = element_text(size=18)) + 
+  ylab("Correct judgments") + 
+  scale_y_continuous(breaks=seq(0,1,0.1), limits=c(0,1)) + 
+  theme(legend.position = "none") + 
+  geom_jitter()
+
+Plot_successImprec
+
+ggsave("Rplot_interactionPlot_mSuccessImprec.png", path = figure_path, width = 5.5, height = 3.5, units = "in", device='png', dpi=300, limitsize=FALSE)
+# SIZE: 550x350
+
+```
+
+
+<br> Plots for Polarization:
+
+```{r success by polarization plots, echo=FALSE, results="hide"}
+
+# plot interaction via ggplot
+Plot_successPolar <- interact_plot(mSuccess_truth_ambig_ctrld2, pred = Polarization, modx = Veracity, plot.points = FALSE,interval = TRUE, outcome.scale="response", colors = c("#F8766D", "#00BFC4"))
+# outcome.scale="link" -> to plot on a linear scale; outcome.scale="response" -> to plot on data original scale
+
+Plot_successPolar <- Plot_successPolar + 
+  theme_pubr() +
+  theme(axis.text = element_text(size = 18)) + theme(axis.title = element_text(size = 18)) + 
+  theme(legend.title = element_text(size = 18)) + 
+  theme(legend.text = element_text(size = 18),axis.title.y = element_text(size=18),
+        axis.title.x = element_text(size=18)) + 
+  ylab("Correct judgments") + 
+  scale_y_continuous(breaks=seq(0,1,0.1), limits=c(0,1)) + 
+  theme(legend.position = "none") + 
+  geom_jitter()
+
+Plot_successPolar
+
+ggsave("Rplot_interactionPlot_mSuccessPolar.png", path = figure_path, width = 5.5, height = 3.5, units = "in", device='png', dpi=300, limitsize=FALSE)
+# SIZE: 550x350
+
+```
+
+Finally, we combine plots:
+
+```{r, echo=FALSE}
+
+Plot_successPolar = Plot_successPolar + labs(y = NULL)
+
+success_combined_plots <- ggarrange(Plot_successImprec, Plot_successPolar, ncol=2, nrow=1, common.legend = TRUE, legend="top")
+success_combined_plots
+ggsave("Rplot_MLM_success_imprec_polar.png", path = figure_path, width = 5.5, height = 3.5, units = "in", device='png', dpi=300, limitsize=FALSE)
+
+```
+
+
+
+
+
+## E. MLM of judgment: interaction effect of imprecision with veracity
+
+We test models of judgment as explained by the level of news content imprecision:
+`r table_5`
+
+<br> <br>
+
+We compute estimated marginal means (emmeans) of judgment as explained by
+the model of imprecision interacting with the veracity, controlled as follows:
+
+```{r echo=FALSE}
+formula(mJudgment_truth_ambig2_ctrld)
+```
+
+The probability of veracity judgment for true and false news, given an imprecision at the lowest or highest level, is: 
+
+```{r MLM of judgment: imprecision effect: emmeans prob, echo=FALSE}
+
+estJudgment_truth_imprec
+
+```
+
+As content imprecision increased, the likelihood to judge news as true significantly decreased:
+
+```{r MLM of judgment: imprecision effect: emmeans pairs, echo=FALSE}
+
+estJudgment_imprec_pairs
+estJudgment_imprec_pairs
+estJudgment_truth_imprec_pairs
+estJudgment_truth_imprec_ci
+
+```
+
+The probability of veracity judgment for true and false news, given an imprecision at the lowest or highest level, is: 
+
+```{r MLM of judgment: polarization effect: emmeans prob, echo=FALSE}
+
+estJudgment_truth_polar
+
+```
+
+As content imprecision increased, the likelihood to judge news as true significantly decreased:
+
+```{r MLM of judgment: polarization effect: emmeans pairs, echo=FALSE}
+
+estJudgment_polar_pairs
+estJudgment_polar_pairs_ci
+estJudgment_truth_polar_pairs
+estJudgment_truth_polar_ci
+
+```
+
+<br> Imprecision plots:
+
+```{r judgment by imprecision plots, echo=FALSE, results="hide"}
+
+# plot interaction via ggplot
+Plot_JudgmentImprec <- interact_plot(mJudgment_truth_ambig2_ctrld, pred = Imprecision, modx = Veracity, plot.points = FALSE,interval = TRUE,outcome.scale="response", colors = c("#F8766D", "#00BFC4"))
+# outcome.scale="link" -> to plot on a linear scale; outcome.scale="response" -> to plot on data original scale
+Plot_JudgmentImprec <- Plot_JudgmentImprec + 
+  theme_pubr() +
+  theme(axis.text = element_text(size = 18)) + theme(axis.title = element_text(size = 18)) + 
+  theme(legend.title = element_text(size = 18)) + 
+  theme(legend.text = element_text(size = 18),axis.title.y = element_text(size=18),
+        axis.title.x = element_text(size=18)) + ylab("Judgments as true") + 
+  scale_y_continuous(breaks=seq(0,1,0.1), limits=c(0,1)) + 
+  theme(legend.position = "none") + 
+  geom_jitter() 
+Plot_JudgmentImprec
+
+ggsave("Rplot_interactionPlot_mJudgmentImprec.png", path = figure_path, width = 5.5, height = 3.5, units = "in", device='png', dpi=300, limitsize=FALSE)
+# SIZE: 550x350
+
+```
+
+
+<br> Polarization plots:
+
+```{r judgment by Polarization plots, echo=FALSE, results="hide"}
+
+# plot interaction via ggplot
+Plot_JudgmentPolar <- interact_plot(mJudgment_truth_ambig2_ctrld, pred = Polarization, modx = Veracity, plot.points = FALSE,interval = TRUE,outcome.scale="response", colors = c("#F8766D", "#00BFC4"))
+# outcome.scale="link" -> to plot on a linear scale; outcome.scale="response" -> to plot on data original scale
+Plot_JudgmentPolar <- Plot_JudgmentPolar + 
+  theme_pubr() +
+  theme(axis.text = element_text(size = 18)) + theme(axis.title = element_text(size = 18)) + 
+  theme(legend.title = element_text(size = 18)) + 
+  theme(legend.text = element_text(size = 18),axis.title.y = element_text(size=18),
+        axis.title.x = element_text(size=18)) + ylab("Judgments as true") + 
+  scale_y_continuous(breaks=seq(0,1,0.1), limits=c(0,1)) + 
+  theme(legend.position = "none") + 
+  geom_jitter() 
+Plot_JudgmentPolar
+
+ggsave("Rplot_interactionPlot_mJudgmentPolar.png", path = figure_path, width = 5.5, height = 3.5, units = "in", device='png', dpi=300, limitsize=FALSE)
+# SIZE: 550x350
+
+```
+
+Finally, we combine plots:
+
+```{r, echo=FALSE}
+
+Plot_JudgmentPolar = Plot_JudgmentPolar + labs(y = NULL)
+
+judgment_combined_plots <- ggarrange(Plot_JudgmentImprec, Plot_JudgmentPolar, ncol=2, nrow=1, common.legend = TRUE, legend="top")
+judgment_combined_plots
+ggsave("Rplot_MLM_judgment_imprec_polar.png", path = figure_path, width = 5.5, height = 3.5, units = "in", device='png', dpi=300, limitsize=FALSE)
+
+```
+
+
+
+
+
+## F. MLM of success: Alternative hypotheses
+
+We test alternative hypotheses for the success in estimating veracity:
+
+Organizations models:
+<br><br> `r table_8` 
+
+```{r generate output of table_8, echo=FALSE, include=FALSE, results = 'hide'}
+table_8
+
+webshot(table_8$file, paste(figure_path, "/", "tab_mSuccess_alternatives_organizations.png", sep=""), zoom = 3)
+```
+
+Alternatives models:
+<br><br> `r table_9`
+
+```{r generate output of table_9, echo=FALSE, include=FALSE, results = 'hide'}
+table_9
+
+webshot(table_9$file, paste(figure_path, "/", "tab_mSuccess_alternatives.png", sep=""), zoom = 3)
+```
+
+
+
+
+
+## G. MLM of Metacognition (confidence)
+
+We test models of confidence as explained by the level of news content imprecision:
+
+Organizations models:
+`r table_11` 
+
+```{r generate output of table_11, echo=FALSE, include=FALSE, results = 'hide'}
+table_11
+
+webshot(table_11$file, paste(figure_path, "/", "tab_mConfidence_organizations.png", sep=""), zoom = 3)
+```
+
+Imprecision models:
+<br><br> `r table_12` 
+
+```{r generate output of table_12, echo=FALSE, include=FALSE, results = 'hide'}
+table_12
+
+webshot(table_12$file, paste(figure_path, "/", "tab_mConfidence_judgment_ambig.png", sep=""), zoom = 3)
+```
+
+<br><br>
+
+We compute estimated marginal means (emmeans) of confidence as explained by
+the model of imprecision interacting with the judgment, controlled as follows:
+
+```{r echo=FALSE}
+formula(mConfidence_judgment_ambig2_ctrld)
+```
+
+The estimated marginal means show that confidence was higher for judgments of the news as true than for judgments of the news as false when the news content imprecision was at its lowest level. 
+In contrast, confidence was higher for judgments of the news as false than for judgments of the news as true when imprecision was at its highest level. 
+Finally, confidence was not significantly different between the two types of judgments for a median imprecision level.
+
+```{r MLM of confidence: imprecision effect: emmeans pairs, echo=FALSE}
+
+# estConfidence_judgment_imprec
+estConfidence_judgment_imprec_pairs
+estConfidence_judgment_imprec_pairs_ci
+# estConfidence_judgment_imprec_size
+
+```
+
+
+Moreover, the estimated marginal means show that confidence was higher for judgments of the news as true than for judgments of the news as false when the news content Polarization was at its lowest level. 
+In contrast, confidence was higher for judgments of the news as false than for judgments of the news as true when Polarization was at its highest level. 
+Finally, confidence was not significantly different between the two types of judgments for a median Polarization level.
+
+```{r MLM of confidence: Polarization effect: emmeans pairs, echo=FALSE}
+
+# estConfidence_judgment_polar
+estConfidence_judgment_polar_pairs
+estConfidence_judgment_polar_pairs_ci
+# estConfidence_judgment_polar_size
+
+```
+
+
+
+
+## H. Models of Success, Judgment and Confidence as explained by ambiguity
+```{r, echo = FALSE}
+
+table_15
+webshot(table_15$file, paste(figure_path, "/", "tab_mAll_truth_ambig.png", sep=""), zoom = 3)
+
+```
+
+
+
+
+
+## I. GLM of reception
+
+We test models of choices to receive additional information as explained by the level of news content imprecision:
+`r table_13` <br>
+
+```{r generate output of table_13, echo=FALSE, include=FALSE, results = 'hide'}
+table_13
+
+webshot(table_13$file, paste(figure_path, "/", "tab_mRec_confidence.png", sep=""), zoom = 3)
+```
+
+We compute estimated marginal means (emmeans) of reception as explained by
+the model of confidence interacting with the judgment, controlled as follows:
+
+```{r echo=FALSE}
+formula(mRec_confidence2_ctrld)
+```
+
+The probability to choose to receive additional information, for news judged as true and news judged as false, is higher when participants had low confidence:
+
+```{r MLM of reception: metacognition effect: emmeans prob, echo=FALSE}
+
+estRec_judgment_confidence
+
+```
+
+The probability of demanding more information decreases as confidence in one’s judgment increases. Emmeans comparisons show that the probability decreases even more as confidence increases when the brief news was judged as false:
+
+```{r MLM of reception: metacognition effect: emmeans pairs, echo=FALSE}
+
+estRec_judgment_confidence_pairs
+estRec_judgment_confidence_ci
+# estRec_judgment_confidence_size
+
+```
+
+Plots:
+
+```{r reception by unscaled confidence plots, echo=FALSE, results="hide"}
+
+# plot interaction via ggplot
+PlotRec_Confidence <- interact_plot(mRec_confidence_plot, pred = Confidence, modx = Judgment, plot.points = FALSE,interval = TRUE,outcome.scale="response")
+# outcome.scale="link" -> to plot on a linear scale; outcome.scale="response" -> to plot on data original scale
+
+PlotRec_Confidence <- PlotRec_Confidence + 
+  theme_pubr() +
+  theme(axis.text = element_text(size = 18)) + theme(axis.title = element_text(size = 18)) + 
+  theme(legend.title = element_text(size = 18)) + 
+  theme(legend.text = element_text(size = 18),axis.title.y = element_text(size=18),
+        axis.title.x = element_text(size=18)) + ylab("Probability to receive") + 
+  geom_jitter() +
+  scale_color_viridis_d(option = "H", begin = 0.2, end = 0.8, direction = -1)
+
+PlotRec_Confidence
+
+ggsave("Rplot_interactionPlot_mRec_Confidence.png", path = figure_path, width = 5.5, height = 3.5, units = "in", device='png', dpi=300, limitsize=FALSE)
+# SIZE: 550x350
+
+```
+
+
+
+
+
+## K. GLM of WTP
+
+We test models of Willingness-To-Pay as explained by the level of news content imprecision:
+`r table_14` <br>
+
+```{r generate output of table_14, echo=FALSE, include=FALSE, results = 'hide'}
+table_14
+
+webshot(table_14$file, paste(figure_path, "/", "tab_mWTP_confidence.png", sep=""), zoom = 3)
+```
+
+We compute estimated marginal means (emmeans) of Willingness-To-Pay as explained by
+the model of confidence interacting with the judgment, controlled as follows:
+
+```{r echo=FALSE}
+formula(mWTP_confidence2bis_ctrld)
+```
+
+The value of the WTP, for choices to receive additional information, doesn't vary much with the confidence. However the WTP increases with the confidence when participants chose not to receive additional information:
+
+```{r MLM of WTP: metacognition effect: emmeans prob, echo=FALSE}
+
+estWTP_rec_confidence_2
+
+```
+
+Participants are willing to pay more not to receive more information about what they think they already know:
+
+```{r MLM of WTP: metacognition effect: emmeans pairs, echo=FALSE}
+
+estWTP_rec_confidence_pairs
+estWTP_rec_confidence_ci
+# estWTP_rec_confidence_size # gives the LCL and UCL for the Effect size plot below
+
+```
+
+Plots:
+
+```{r WTP by unscaled confidence plots, echo=FALSE, results="hide"}
+
+# plot interaction via ggplot
+PlotWTP_Confidence <- interact_plot(mWTP_confidence_plot, pred = Confidence, modx = Reception, plot.points = FALSE,interval = TRUE, legend.main = "Choice", modx.labels = c("No reception", "Reception"),outcome.scale="response")
+# outcome.scale="link" -> to plot on a linear scale; outcome.scale="response" -> to plot on data original scale
+
+PlotWTP_Confidence <- PlotWTP_Confidence + 
+  theme_pubr() +
+  theme(axis.text = element_text(size = 18)) + theme(axis.title = element_text(size = 18)) + 
+  theme(legend.title = element_text(size = 18)) + 
+  theme(legend.text = element_text(size = 18),axis.title.y = element_text(size=18),
+        axis.title.x = element_text(size=18)) + ylab("Willingness-to-Pay") + 
+  guides(modx=guide_legend("Choice")) +
+  #scale_fill_discrete(name = "Choice", labels = c("Reception", "No reception")) +
+  geom_jitter() 
+
+PlotWTP_Confidence
+
+ggsave("Rplot_interactionPlot_mWTP_Confidence_rec.png", path = figure_path, width = 5.5, height = 3.5, units = "in", device='png', dpi=300, limitsize=FALSE)
+# SIZE: 550x350
+
+```
+
+## L. Moderated Mediation analysis
+
+We performed a moderated mediation analysis.
+Specifically, The hypothesized multiple moderated mediation model was tested in a single model using a bootstrapping approach to assess the significance of the indirect effects at differing levels of the mediator and the moderators (Hayes, 2013). News content imprecision and news content polarization were the predictor variables, with confidence the mediator. The outcome variable was the reception choice and news veracity was the proposed moderator. Moderated mediation analyses test the conditional indirect effect of a moderating variable (i.e., news veracity) on the relationship between predictors (i.e., news content imprecision and news content polarization) and an outcome variable (i.e., reception choice) via potential mediators (i.e., confidence). The package lavaan (Rosseel, 2012) in R with bias-corrected 95% confidence intervals (n = 1000) was used to test the significance of the indirect (i.e., mediated) effects moderated by news veracity, i.e., conditional indirect effects. This model explicitly tests the moderating effect on the predictor to mediator path. An index of moderated mediation was used to test the significance of the moderated mediation, i.e., the difference of the indirect effects across levels of news veracity. Significant effects are supported by the absence of zero within the confidence intervals.
+
+
+First, we check that the standardized factor loadings are superior to the recommended 0.6 threshold:
+```{r, ech=FALSE}
+cfa_factor_loadings
+```
+
+That the composite reliability is superior to the recommended 0.7 threshold:
+```{r, ech=FALSE}
+cfa_composite_reliability
+```
+
+And that the average variance extracted is superior to the recommended 0.5 threshold:
+```{r, ech=FALSE}
+cfa_variance
+```
+
+
+
+Then, we show the summary of the model
+
+```{r, echo=FALSE}
+summary(fit_complex_categ_mediation, standardized = F, rsquare=T)
+```
+
+Then we display the full table of the paths with the confidence intervals.
+
+```{r, echo=FALSE}
+
+moderated_mediation_full_table = lavaan::parameterEstimates(fit_complex_categ_mediation)
+
+med_predictors_table = lavaanExtra::lavaan_reg(fit_complex_categ_mediation, nice_table = TRUE, highlight = TRUE)
+
+moderated_mediation_full_table
+med_predictors_table
+
+save_as_image(med_predictors_table, path = paste(figure_path, "/tabModerated_mediation_predictors_table.png", sep=""), expand = 20, res = 300, background="white")
+
+```
+
+
+Finally, we plot the mediation path diagram.
+Only hypothesized paths are shown. Other paths are beyond the scope of this study.
+```{r, echo=FALSE}
+
+med_plot = lavaanPlot::lavaanPlot(model = fit_complex_categ_mediation, graph_options = list(rankdir = "LR"), node_options = list(shape = "box", fontname = "Helvetica"), edge_options = list(color = "grey"), coefs = TRUE, covs = FALSE, stars = "regress", sig = 0.05, stand = TRUE)
+
+# We add labels to paths, were x1 is imprecision, x2 is polarization, m is mediating effect, w is moderating effect, primes represent indirect paths and no primes represent direct paths
+med_plot[["x"]][["diagram"]]  = " digraph plot { \n graph [ rankdir = LR ] \n node [ shape = box, fontname = Helvetica ] \n node [shape = box] \n Imprecision; Judgment; Polarization; Confidence; Imprecision:Judgment; Polarization:Judgment; Reception \n node [shape = oval] \n  \n \n edge [ color = grey ] \n Imprecision->Reception [label = \"x1\"] Judgment->Reception [label = \"w\"] Polarization->Reception [label = \"x2\"] Confidence->Reception [label = \"m: -0.15***\"] Imprecision:Judgment->Reception [label = \"x1w\"] Polarization:Judgment->Reception [label = \"x2w\"] Imprecision->Confidence [label = \"x1': -0.06***\"] Judgment->Confidence [label = \"w': 0.28***\"] Polarization->Confidence [label = \"x2': 0.11***\"] Imprecision:Judgment->Confidence [label = \"x1w': 0.1*\"] Polarization:Judgment->Confidence [label = \"x2w': -0.36***\"]  \n}"
+
+med_plot
+
+save_png(med_plot, paste(figure_path, "/Rplot_moderated_mediation_model.png", sep=""), width = 5500, height = 3500)
+# SIZE: 550x350
+
+```

@@ -65,14 +65,3 @@ judgment_combined_plots
 ggsave("Rplot_judgment_imprec_polar_notheme.png", path = figure_path, width = 5.5, height = 3.5, device='png', dpi=300, limitsize=FALSE)
 
 ```
-
-
-### Participants choices to receive for Precise/Imprecise news & Consensual/Polarizing news
-
-```{r, echo=FALSE}
-
-reception_combined_plots <- ggarrange(reception_imprecision_boxplot, reception_Polarization_boxplot, ncol=2, nrow=1, common.legend = TRUE, legend="top")
-reception_combined_plots
-ggsave("Rplot_reception_imprec_polar_notheme.png", path = figure_path, width = 5.5, height = 3.5, device='png', dpi=300, limitsize=FALSE)
-
-```
